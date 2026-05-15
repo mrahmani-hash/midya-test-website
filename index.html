@@ -3,51 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Midya Rahmani — Atlassian consultant & engineer. Jira, Confluence, cloud, automation." />
-  <meta name="theme-color" content="#030508" />
-  <meta property="og:title" content="Midya Rahmani — Atlassian Systems" />
-  <meta property="og:description" content="Consultant & engineer across the Atlassian ecosystem." />
+  <meta name="description" content="Midya Rahmani — Atlassian engineer. Platform automation, APIs, Jira & Confluence systems." />
+  <meta name="theme-color" content="#020308" />
+  <meta property="og:title" content="Midya Rahmani — Atlassian Engineer" />
+  <meta property="og:description" content="Engineering the Atlassian stack: automation, integrations, reliability." />
   <meta property="og:url" content="https://midya.ca" />
   <meta property="og:type" content="website" />
-  <title>Midya Rahmani — Atlassian Consultant & Engineer</title>
+  <title>Midya Rahmani — Atlassian Engineer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,600;0,700;0,800;1,500&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23030508'/%3E%3Cpath d='M6 24V8h6l4 8 4-8h6v16h-5V14l-5 10h-1L6 14v10H6z' fill='%2300f3ff'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23020308'/%3E%3Cpath fill='%2300ffd5' d='M8 24V8h4v6.5L18 8h6l-6.5 6.2L25 24h-4.5l-4.2-8.2L12 18.5V24H8z'/%3E%3C/svg%3E" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="fx" aria-hidden="true">
-    <div class="fx__grid"></div>
-    <div class="fx__glow fx__glow--cyan"></div>
-    <div class="fx__glow fx__glow--crimson"></div>
-    <div class="fx__scan"></div>
+  <canvas id="field" class="field" aria-hidden="true"></canvas>
+
+  <div class="atmos" aria-hidden="true">
+    <div class="atmos__blob atmos__blob--a"></div>
+    <div class="atmos__blob atmos__blob--b"></div>
+    <div class="atmos__blob atmos__blob--c"></div>
+    <div class="atmos__rings">
+      <svg class="atmos__svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00ffd5" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="#ff2a8c" stop-opacity="0.25" />
+          </linearGradient>
+        </defs>
+        <circle class="atmos__ring atmos__ring--1" cx="200" cy="200" r="120" fill="none" stroke="url(#rg)" stroke-width="0.6" />
+        <circle class="atmos__ring atmos__ring--2" cx="200" cy="200" r="168" fill="none" stroke="url(#rg)" stroke-width="0.4" opacity="0.6" />
+        <circle class="atmos__ring atmos__ring--3" cx="200" cy="200" r="210" fill="none" stroke="#00ffd5" stroke-width="0.3" opacity="0.25" />
+      </svg>
+    </div>
+    <div class="atmos__grid"></div>
+    <div class="atmos__noise"></div>
   </div>
 
   <div class="hud" aria-hidden="true">
-    <span class="hud__line" data-hud="SYS">NET: SECURE</span>
-    <span class="hud__line" data-hud="CLK" id="hud-clock">--:--:--</span>
+    <span class="hud__bit" id="hud-hash">0x000000</span>
+    <span class="hud__bit" id="hud-tick">T+00.000</span>
   </div>
 
-  <header class="header">
-    <div class="header__bar">
-      <a class="brand" href="#">
-        <span class="brand__glyph" aria-hidden="true"></span>
-        <span class="brand__text">MIDYA<span class="brand__dot">.CA</span></span>
+  <header class="head">
+    <div class="head__inner">
+      <a class="mark" href="#" data-magnetic>
+        <span class="mark__orb" aria-hidden="true"></span>
+        <span class="mark__txt">MIDYA<span>.CA</span></span>
       </a>
       <nav class="nav" aria-label="Primary">
-        <button type="button" class="nav__toggle" aria-expanded="false" aria-controls="nav-panel">
-          <span class="nav__toggle-lines"></span>
+        <button type="button" class="nav__btn" aria-expanded="false" aria-controls="nav-drawer">
+          <span class="nav__icon" aria-hidden="true"></span>
           <span class="sr-only">Menu</span>
         </button>
-        <div id="nav-panel" class="nav__panel">
+        <div id="nav-drawer" class="nav__drawer">
           <ul class="nav__list">
-            <li><a href="#mission"><span class="nav__idx">01</span> Mission</a></li>
-            <li><a href="#stack"><span class="nav__idx">02</span> Stack</a></li>
-            <li><a href="#ops"><span class="nav__idx">03</span> Operations</a></li>
-            <li><a href="#signal"><span class="nav__idx">04</span> Signal</a></li>
+            <li><a href="#core" data-magnetic><em>01</em> Core</a></li>
+            <li><a href="#streams" data-magnetic><em>02</em> Streams</a></li>
+            <li><a href="#lattice" data-magnetic><em>03</em> Lattice</a></li>
+            <li><a href="#uplink" data-magnetic><em>04</em> Uplink</a></li>
           </ul>
         </div>
       </nav>
@@ -55,160 +71,125 @@
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__content">
-        <p class="tag reveal" data-reveal><span class="tag__pulse" aria-hidden="true"></span> ATLASSIAN CONSULTANT · ENGINEER</p>
-        <h1 id="hero-title" class="hero__title reveal" data-reveal>
-          <span class="hero__title-top">MIDYA RAHMANI</span>
-          <span class="hero__title-sub">Deploy clarity. Automate the grind. Scale the craft.</span>
-        </h1>
-        <p class="hero__lede reveal" data-reveal>
-          I architect and ship outcomes across the Atlassian universe — <strong>Jira</strong>, <strong>Confluence</strong>,
-          <strong>JSM</strong>, <strong>Bitbucket</strong>, and the glue between them: migrations, governance,
-          integrations, and AI-ready workflows that teams actually use.
+    <section class="hero" aria-labelledby="hero-name">
+      <div class="hero__parallax" data-parallax="0.06"></div>
+      <div class="hero__wrap">
+        <p class="hero__pulse">
+          <span class="hero__dot" aria-hidden="true"></span>
+          ATLASSIAN ENGINEER · PLATFORM LAYER
         </p>
-        <div class="hero__cta reveal" data-reveal>
-          <a class="btn btn--primary" href="#signal">Open channel</a>
-          <a class="btn btn--outline" href="#stack">View capabilities</a>
+
+        <h1 id="hero-name" class="hero__name">
+          <span class="glitch" data-text="MIDYA RAHMANI">MIDYA RAHMANI</span>
+        </h1>
+
+        <p class="hero__tag" id="hero-scramble" data-scramble>
+          I engineer the living substrate behind Jira, Confluence, and JSM — schemas, automation, APIs, and the glue that keeps work observable.
+        </p>
+
+        <div class="hero__row">
+          <a class="chip chip--go" href="#lattice" data-magnetic>Explore lattice</a>
+          <a class="chip" href="#uplink" data-magnetic>Open uplink</a>
         </div>
-      </div>
-      <div class="hero__panel reveal" data-reveal aria-hidden="true">
-        <div class="panel">
-          <div class="panel__head">
-            <span>UNIT // RAHMANI</span>
-            <span class="panel__status">ONLINE</span>
+
+        <div class="hero__viz" aria-hidden="true">
+          <div class="hero__orbit">
+            <span></span><span></span><span></span><span></span>
           </div>
-          <dl class="panel__stats">
-            <div><dt>FOCUS</dt><dd>Cloud · Data Center · Automation</dd></div>
-            <div><dt>MODE</dt><dd>Consult · Build · Transfer</dd></div>
-            <div><dt>DOMAINS</dt><dd>ITSM · Agile · DevOps · Docs</dd></div>
-          </dl>
-          <div class="panel__bar"><span></span></div>
+          <div class="hero__shard"></div>
         </div>
       </div>
     </section>
 
-    <section id="mission" class="section">
-      <header class="section__head reveal" data-reveal>
-        <span class="section__id">SECTOR 01</span>
-        <h2 class="section__title">Mission profile</h2>
-        <p class="section__rule"></p>
-      </header>
-      <div class="split">
-        <div class="prose reveal" data-reveal>
-          <p>
-            As an <strong>Atlassian consultant and engineer</strong>, I help organizations turn fragmented tools
-            into a coherent operating system: clear service catalogs, traceable work, documentation that earns trust,
-            and automation that removes toil instead of hiding it.
-          </p>
-          <p>
-            From greenfield Cloud launches to complex Data Center footprints, I bridge the gap between
-            <em>what the business needs</em> and <em>what the platform can do</em> — designing schemas, permissions,
-            and integrations that stay maintainable after the handoff.
-          </p>
-        </div>
-        <ul class="matrix reveal" data-reveal>
-          <li><span class="matrix__k">ATL_ECOSYSTEM</span><span class="matrix__v">Jira · Confluence · JSM · Bitbucket · Compass</span></li>
-          <li><span class="matrix__k">DELIVERY</span><span class="matrix__v">Roadmaps · SLAs · CMDB patterns · Reporting</span></li>
-          <li><span class="matrix__k">AUTOMATION</span><span class="matrix__v">Automation rules · REST · Apps · CI hooks</span></li>
-          <li><span class="matrix__k">TRANSFORM</span><span class="matrix__v">Assessments · Migrations · Runbooks · Training</span></li>
-        </ul>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span>JQL · workflow validators · scripted fields · REST v3 · webhooks · Insight assets · Forge runtime · DC clustering · index latency · OAuth2 · rate limits · changeItem logs · board swimlanes · CMDB sync ·</span>
+        <span>JQL · workflow validators · scripted fields · REST v3 · webhooks · Insight assets · Forge runtime · DC clustering · index latency · OAuth2 · rate limits · changeItem logs · board swimlanes · CMDB sync ·</span>
       </div>
-    </section>
+    </div>
 
-    <section id="stack" class="section section--dark">
-      <header class="section__head reveal" data-reveal>
-        <span class="section__id">SECTOR 02</span>
-        <h2 class="section__title">Capability matrix</h2>
-        <p class="section__rule section__rule--short"></p>
+    <section id="core" class="band">
+      <header class="band__hd reveal" data-reveal>
+        <span class="band__sig">NODE // CORE</span>
+        <h2 class="band__ttl">What I build on the stack</h2>
       </header>
-      <ul class="deck">
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">Platform architecture</h3>
-          <p class="tile__body">Projects, schemes, workflows, fields, and permission models built for scale — not sprawl.</p>
+      <ul class="core">
+        <li class="core__card reveal" data-reveal data-tilt>
+          <div class="core__beam" aria-hidden="true"></div>
+          <h3>Execution fabric</h3>
+          <p>Workflows, conditions, validators, and post-functions tuned so state transitions stay honest under load.</p>
         </li>
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">Cloud &amp; migration</h3>
-          <p class="tile__body">Assess → plan → execute: Cloud moves, merge/split, app rationalization, and cutover discipline.</p>
+        <li class="core__card reveal" data-reveal data-tilt>
+          <div class="core__beam" aria-hidden="true"></div>
+          <h3>Automation &amp; APIs</h3>
+          <p>Rules, webhooks, and REST integrations with retries, idempotency, and logs you can trace in the dark.</p>
         </li>
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">Service &amp; delivery</h3>
-          <p class="tile__body">JSM portals, request types, assets, and ITSM patterns aligned to how teams really work.</p>
+        <li class="core__card reveal" data-reveal data-tilt>
+          <div class="core__beam" aria-hidden="true"></div>
+          <h3>Data &amp; search shape</h3>
+          <p>Fields, contexts, indexing realities — engineering for JQL that stays fast as projects multiply.</p>
         </li>
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">Engineering depth</h3>
-          <p class="tile__body">APIs, webhooks, scripting, and pipeline-aware integrations — reliable, observable, documented.</p>
-        </li>
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">Knowledge systems</h3>
-          <p class="tile__body">Confluence spaces, templates, and information architecture that make self-service stick.</p>
-        </li>
-        <li class="tile reveal" data-reveal>
-          <span class="tile__corner" aria-hidden="true"></span>
-          <h3 class="tile__title">AI-forward ops</h3>
-          <p class="tile__body">Practical AI: structured data, clean workflows, and guardrails so copilots amplify — not confuse.</p>
+        <li class="core__card reveal" data-reveal data-tilt>
+          <div class="core__beam" aria-hidden="true"></div>
+          <h3>Reliability &amp; ops</h3>
+          <p>Upgrades, app matrix hygiene, observability hooks, and runbooks so the platform survives Friday afternoon.</p>
         </li>
       </ul>
     </section>
 
-    <section id="ops" class="section">
-      <header class="section__head reveal" data-reveal>
-        <span class="section__id">SECTOR 03</span>
-        <h2 class="section__title">Operations log</h2>
-        <p class="section__rule"></p>
+    <section id="streams" class="band band--dim">
+      <header class="band__hd reveal" data-reveal>
+        <span class="band__sig">NODE // STREAMS</span>
+        <h2 class="band__ttl">Live signal (sample)</h2>
       </header>
-      <ol class="log">
-        <li class="log__row reveal" data-reveal>
-          <span class="log__ts">PHASE</span>
-          <div class="log__body">
-            <strong>Discovery &amp; blueprint</strong>
-            <span>Stakeholder interviews, platform audits, target-state diagrams, and risk-aware roadmaps.</span>
-          </div>
-        </li>
-        <li class="log__row reveal" data-reveal>
-          <span class="log__ts">PHASE</span>
-          <div class="log__body">
-            <strong>Build &amp; harden</strong>
-            <span>Configuration sprints, automation, QA environments, and change windows that respect production.</span>
-          </div>
-        </li>
-        <li class="log__row reveal" data-reveal>
-          <span class="log__ts">PHASE</span>
-          <div class="log__body">
-            <strong>Enablement</strong>
-            <span>Admin playbooks, power-user coaching, and launch comms so adoption survives day two.</span>
-          </div>
-        </li>
-        <li class="log__row reveal" data-reveal>
-          <span class="log__ts">PHASE</span>
-          <div class="log__body">
-            <strong>Continuous improvement</strong>
-            <span>Health metrics, backlog hygiene, and iteration loops — platforms evolve; drift is the enemy.</span>
-          </div>
-        </li>
-      </ol>
+      <ul class="streams reveal" data-reveal>
+        <li><time>+000ms</time><code>issue.transitioned</code><span>workflow guard passed · payload 2.1kb</span></li>
+        <li><time>+042ms</time><code>webhook.delivery</code><span>200 · signed · retry=0</span></li>
+        <li><time>+118ms</time><code>automation.rule</code><span>branch edit · cascade child issues</span></li>
+        <li><time>+240ms</time><code>index.reconcile</code><span>JQL board cold cache refresh</span></li>
+        <li><time>+333ms</time><code>plugin.boundary</code><span>sandbox OK · heap stable</span></li>
+      </ul>
     </section>
 
-    <section id="signal" class="section section--terminal">
-      <div class="terminal reveal" data-reveal>
-        <header class="terminal__head">
-          <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="terminal__label">OUTBOUND :: CONTACT</span>
+    <section id="lattice" class="band">
+      <header class="band__hd reveal" data-reveal>
+        <span class="band__sig">NODE // LATTICE</span>
+        <h2 class="band__ttl">Engineering lattice</h2>
+      </header>
+      <div class="lattice">
+        <article class="lattice__cell lattice__cell--wide reveal" data-reveal data-tilt>
+          <div class="lattice__scan" aria-hidden="true"></div>
+          <h3>Confluence + Jira coupling</h3>
+          <p>Macros, links, and metadata flows engineered so documentation and execution stay in lockstep — not two divergent truths.</p>
+        </article>
+        <article class="lattice__cell reveal" data-reveal data-tilt>
+          <h3>JSM depth</h3>
+          <p>Queues, SLAs, assets, and portal UX wired to the same rigor as code paths.</p>
+        </article>
+        <article class="lattice__cell reveal" data-reveal data-tilt>
+          <h3>Bitbucket bridges</h3>
+          <p>Branch ↔ issue linking, build status surfaces, and pipeline events feeding the work graph.</p>
+        </article>
+        <article class="lattice__cell lattice__cell--tall reveal" data-reveal data-tilt>
+          <h3>Future channel</h3>
+          <p>Structured fields, clean events, and predictable APIs — the substrate that makes AI assistants accurate instead of theatrical.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="uplink" class="band band--end">
+      <div class="uplink reveal" data-reveal>
+        <div class="uplink__aura" aria-hidden="true"><div class="uplink__auraSpin"></div></div>
+        <header class="uplink__hd">
+          <span class="uplink__sig">UPLINK</span>
+          <h2>Transmit</h2>
         </header>
-        <div class="terminal__body">
-          <p class="terminal__prompt"><span class="terminal__user">visitor@midya.ca</span><span class="terminal__sym">:~$</span> ./open_channel.sh</p>
-          <p>For Atlassian initiatives, advisory, or engineering support — initiate contact.</p>
-          <div class="terminal__actions">
-            <a class="btn btn--primary" href="mailto:hello@midya.ca">hello@midya.ca</a>
-            <a class="btn btn--outline" href="https://www.linkedin.com/in/your-profile" rel="noopener noreferrer" target="_blank">LinkedIn uplink</a>
-          </div>
-          <p class="terminal__meta">© <span id="year"></span> Midya Rahmani · midya.ca</p>
+        <p class="uplink__txt">Engineering collaborations, deep dives on automation, or platform firefighting — open a line.</p>
+        <div class="uplink__actions">
+          <a class="btn btn--prime" href="mailto:hello@midya.ca" data-magnetic>hello@midya.ca</a>
+          <a class="btn btn--ghost" href="https://www.linkedin.com/in/your-profile" rel="noopener noreferrer" target="_blank" data-magnetic>LinkedIn</a>
         </div>
+        <p class="uplink__foot">© <span id="year"></span> Midya Rahmani</p>
       </div>
     </section>
   </main>
