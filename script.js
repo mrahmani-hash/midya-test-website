@@ -549,7 +549,7 @@
           r: 40 + Math.random() * 120,
           vx: (Math.random() - 0.5) * 0.4,
           vy: (Math.random() - 0.5) * 0.4,
-          hue: Math.random() > 0.5 ? 170 : 320
+          hue: Math.random() > 0.5 ? 170 : 205
         });
       }
     }
