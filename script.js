@@ -5,6 +5,12 @@
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  var userEmail = ["midyarahmani", "icloud.com"].join("@");
+  document.querySelectorAll("[data-email-link]").forEach(function (el) {
+    el.href = "mailto:" + userEmail;
+    el.textContent = userEmail;
+  });
+
   /* ========== BOOT ========== */
   var boot = document.getElementById("boot");
   var bootFill = document.getElementById("boot-fill");
