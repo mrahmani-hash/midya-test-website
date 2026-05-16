@@ -576,14 +576,20 @@ main { position: relative; z-index: 3; }
   position: relative;
   z-index: 1;
   max-width: var(--max); margin: 0 auto; width: 100%;
-  display: grid; gap: 28px 40px; align-items: start;
-}
-@media (max-width: 959px) {
-  .hero__stage { order: -1; margin-top: -0.25rem; }
 }
 .hero__copy {
   position: relative;
   z-index: 2;
+}
+.hero__intro {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 4vw, 36px);
+  margin-bottom: 18px;
+}
+.hero__headline {
+  flex: 1;
+  min-width: 0;
 }
 .hero__cta {
   position: relative;
@@ -593,15 +599,6 @@ main { position: relative; z-index: 3; }
   position: relative;
   z-index: 1;
   pointer-events: auto;
-}
-@media (min-width: 960px) {
-  .hero__grid { grid-template-columns: 1.05fr 0.95fr; }
-  .hero__copy { grid-column: 1; order: 1; padding-top: 1.5rem; }
-  .hero__stage {
-    grid-column: 2; order: 2;
-    align-self: start;
-    margin-top: -2.75rem;
-  }
 }
 .hero__badge {
   display: inline-flex; align-items: center; gap: 10px;
@@ -617,11 +614,14 @@ main { position: relative; z-index: 3; }
 @keyframes pulse { 50% { opacity: 0.2; transform: scale(0.8); } }
 
 .hero__name {
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 7vw, 3.5rem);
+  font-size: clamp(1.65rem, 5.5vw, 3.2rem);
   line-height: 1.05;
   letter-spacing: 0.06em;
+}
+.hero__headline .hero__role {
+  margin: 0;
 }
 .glitch {
   position: relative; display: inline-block;
@@ -684,6 +684,43 @@ main { position: relative; z-index: 3; }
   position: relative;
   min-height: 320px;
   display: grid; place-items: center;
+}
+.hero__stage--inline {
+  flex-shrink: 0;
+  width: clamp(132px, 24vw, 210px);
+  height: clamp(132px, 24vw, 210px);
+  min-height: 0;
+  margin: 0;
+}
+.hero__stage--inline .hero__svg {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  margin: auto;
+}
+.hero__stage--inline .hero__portrait {
+  width: 78%;
+  height: 78%;
+  max-width: 168px;
+  max-height: 168px;
+}
+.hero__stage--inline .hero__orbiters {
+  transform: scale(0.62);
+}
+@media (max-width: 560px) {
+  .hero__intro {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .hero__stage--inline {
+    width: clamp(108px, 30vw, 140px);
+    height: clamp(108px, 30vw, 140px);
+  }
+  .hero__stage--inline .hero__portrait {
+    max-width: 120px;
+    max-height: 120px;
+  }
 }
 .hero__portrait {
   position: relative;
