@@ -360,6 +360,7 @@ body {
   transform: translateY(-2px);
 }
 
+.creds { margin-top: 28px; }
 .interests { margin-top: 32px; }
 .interests__ttl {
   margin: 0 0 14px;

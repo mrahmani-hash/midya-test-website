@@ -307,14 +307,14 @@
   /* ========== TERMINAL FEED ========== */
   var termEvents = [
     ["linkedin.sync", "profile · midyarahmani"],
-    ["ai.trend.scan", "new release noted"],
-    ["edu.waterloo", "management science"],
-    ["edu.york", "commerce + IT"],
-    ["exp.adaptavist", "product delivery"],
-    ["exp.cibc", "enterprise context"],
+    ["cert.acp120", "Atlassian Cloud Admin"],
+    ["exp.adaptavist", "Senior Consultant · remote"],
+    ["exp.cibc", "Senior Consultant · awards"],
+    ["edu.waterloo", "MSc · 2021–2023"],
+    ["edu.york", "BCom IT · 2011–2016"],
+    ["locale.toronto", "Toronto, ON"],
+    ["award.impact", "CIBC Impact Award"],
     ["interest.peak", "basketball · courtside"],
-    ["ride.log", "motorcycle · open road"],
-    ["read.queue", "tech + AI feeds"],
     ["signal.strong", "midya.ca · online"]
   ];
 
@@ -599,10 +599,10 @@
     var el = document.getElementById("role-cycle");
     if (!el || reduce) return;
     var roles = [
-      "Technology · AI · Innovation",
+      "Senior Consultant · Adaptavist",
+      "Atlassian Certified · ACP-120",
       "Management Science · Waterloo",
-      "Commerce & IT · York",
-      "Adaptavist · CIBC · Goldline"
+      "Toronto · Canada"
     ];
     var i = 0;
     setInterval(function () {
