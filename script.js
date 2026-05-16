@@ -300,15 +300,15 @@
 
   /* ========== TERMINAL FEED ========== */
   var termEvents = [
-    ["ai.trend.scan", "new model release noted"],
-    ["learning.update", "Waterloo · management science"],
-    ["interest.peak", "basketball · game night"],
-    ["ride.log", "motorcycle · route mapped"],
-    ["read.queue", "tech newsletter · 12 items"],
-    ["idea.capture", "product concept sketched"],
-    ["network.ping", "collaboration channel open"],
-    ["curiosity.mode", "exploring emerging tools"],
-    ["york.archive", "commerce + IT foundations"],
+    ["linkedin.sync", "profile · midyarahmani"],
+    ["ai.trend.scan", "new release noted"],
+    ["edu.waterloo", "management science"],
+    ["edu.york", "commerce + IT"],
+    ["exp.adaptavist", "product delivery"],
+    ["exp.cibc", "enterprise context"],
+    ["interest.peak", "basketball · courtside"],
+    ["ride.log", "motorcycle · open road"],
+    ["read.queue", "tech + AI feeds"],
     ["signal.strong", "midya.ca · online"]
   ];
 
@@ -478,7 +478,7 @@
     var W = 0;
     var H = 0;
     var cols = [];
-    var charset = "01アイウエオｱｲｳｴｵJQL{}[]";
+    var charset = "01アイウエオｱｲｳｴｵAI{}[]<>";
 
     function resize() {
       W = window.innerWidth;
@@ -520,15 +520,108 @@
     requestAnimationFrame(step);
   }
 
+  /* ========== FLARE CANVAS ========== */
+  function initFlare() {
+    var canvas = document.getElementById("field3");
+    if (!canvas || !canvas.getContext || reduce) return;
+    var ctx = canvas.getContext("2d");
+    var W = 0;
+    var H = 0;
+    var orbs = [];
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+      orbs = [];
+      var n = window.innerWidth < 768 ? 6 : 14;
+      for (var i = 0; i < n; i++) {
+        orbs.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: 40 + Math.random() * 120,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          hue: Math.random() > 0.5 ? 170 : 320
+        });
+      }
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function step() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < orbs.length; i++) {
+        var o = orbs[i];
+        o.x += o.vx;
+        o.y += o.vy;
+        if (o.x < -o.r) o.x = W + o.r;
+        if (o.x > W + o.r) o.x = -o.r;
+        if (o.y < -o.r) o.y = H + o.r;
+        if (o.y > H + o.r) o.y = -o.r;
+        var g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+        g.addColorStop(0, "hsla(" + o.hue + ",100%,60%,0.07)");
+        g.addColorStop(1, "transparent");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ========== FLOATING SHARDS ========== */
+  function initShards() {
+    var root = document.getElementById("fx-shards");
+    if (!root || reduce) return;
+    var n = window.innerWidth < 640 ? 8 : 18;
+    for (var i = 0; i < n; i++) {
+      var li = document.createElement("li");
+      li.style.left = Math.random() * 100 + "%";
+      li.style.top = Math.random() * 100 + "%";
+      li.style.animationDelay = -Math.random() * 12 + "s";
+      li.style.animationDuration = 8 + Math.random() * 10 + "s";
+      root.appendChild(li);
+    }
+  }
+
+  /* ========== ROLE CYCLE ========== */
+  function initRoleCycle() {
+    var el = document.getElementById("role-cycle");
+    if (!el || reduce) return;
+    var roles = [
+      "Technology · AI · Innovation",
+      "Management Science · Waterloo",
+      "Commerce & IT · York",
+      "Adaptavist · CIBC · Goldline"
+    ];
+    var i = 0;
+    setInterval(function () {
+      i = (i + 1) % roles.length;
+      el.style.opacity = "0";
+      setTimeout(function () {
+        el.textContent = roles[i];
+        el.style.opacity = "1";
+      }, 280);
+    }, 3200);
+    el.style.transition = "opacity 0.28s ease";
+  }
+
   /* ========== START ========== */
   function startApp() {
+    initShards();
     initReveal();
     initScramble();
     initCounters();
     initSpokes();
+    initRoleCycle();
     initTerminal();
     initMesh();
     initRain();
+    initFlare();
   }
 
   runBoot(startApp);
