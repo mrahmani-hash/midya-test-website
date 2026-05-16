@@ -1,0 +1,22 @@
+{
+  "name": "Midya Rahmani — Atlassian Engineer",
+  "short_name": "Midya.ca",
+  "description": "Atlassian engineer — Jira, Confluence, automation, APIs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#010206",
+  "theme_color": "#010206",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
