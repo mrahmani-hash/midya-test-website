@@ -3,67 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Midya Rahmani — Atlassian engineer. Platform automation, APIs, Jira & Confluence systems." />
-  <meta name="theme-color" content="#020308" />
+  <meta name="description" content="Midya Rahmani — Atlassian engineer. Jira, Confluence, automation, APIs." />
+  <meta name="theme-color" content="#010206" />
   <meta property="og:title" content="Midya Rahmani — Atlassian Engineer" />
-  <meta property="og:description" content="Engineering the Atlassian stack: automation, integrations, reliability." />
+  <meta property="og:description" content="Engineering the Atlassian substrate — automation, integrations, reliability." />
   <meta property="og:url" content="https://midya.ca" />
-  <meta property="og:type" content="website" />
   <title>Midya Rahmani — Atlassian Engineer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,600;0,700;0,800;1,500&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23020308'/%3E%3Cpath fill='%2300ffd5' d='M8 24V8h4v6.5L18 8h6l-6.5 6.2L25 24h-4.5l-4.2-8.2L12 18.5V24H8z'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23010206'/%3E%3Cpath fill='%2300ffe8' d='M8 24V8h4l4 8 4-8h4v16h-4.5V14l-4.5 8.5h-1L12.5 14v10H8z'/%3E%3C/svg%3E" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <canvas id="field" class="field" aria-hidden="true"></canvas>
-
-  <div class="atmos" aria-hidden="true">
-    <div class="atmos__blob atmos__blob--a"></div>
-    <div class="atmos__blob atmos__blob--b"></div>
-    <div class="atmos__blob atmos__blob--c"></div>
-    <div class="atmos__rings">
-      <svg class="atmos__svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00ffd5" stop-opacity="0.5" />
-            <stop offset="100%" stop-color="#ff2a8c" stop-opacity="0.25" />
-          </linearGradient>
-        </defs>
-        <circle class="atmos__ring atmos__ring--1" cx="200" cy="200" r="120" fill="none" stroke="url(#rg)" stroke-width="0.6" />
-        <circle class="atmos__ring atmos__ring--2" cx="200" cy="200" r="168" fill="none" stroke="url(#rg)" stroke-width="0.4" opacity="0.6" />
-        <circle class="atmos__ring atmos__ring--3" cx="200" cy="200" r="210" fill="none" stroke="#00ffd5" stroke-width="0.3" opacity="0.25" />
-      </svg>
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__frame">
+      <div class="boot__logo">MIDYA.CA</div>
+      <div class="boot__bar"><div class="boot__fill" id="boot-fill"></div></div>
+      <div class="boot__log" id="boot-log">INITIALIZING…</div>
     </div>
-    <div class="atmos__grid"></div>
-    <div class="atmos__noise"></div>
   </div>
 
-  <div class="hud" aria-hidden="true">
-    <span class="hud__bit" id="hud-hash">0x000000</span>
-    <span class="hud__bit" id="hud-tick">T+00.000</span>
+  <div class="scroll-prog" id="scroll-prog" aria-hidden="true"></div>
+
+  <canvas id="field" class="layer layer--mesh" aria-hidden="true"></canvas>
+  <canvas id="field2" class="layer layer--rain" aria-hidden="true"></canvas>
+
+  <div class="fx" aria-hidden="true">
+    <div class="fx__horizon"></div>
+    <div class="fx__vignette"></div>
+    <div class="fx__scan"></div>
+    <div class="fx__hexfield" id="hex-css"></div>
   </div>
+
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <span class="cursor__ring"></span>
+    <span class="cursor__dot"></span>
+  </div>
+
+  <aside class="hud" aria-hidden="true">
+    <div class="hud__col">
+      <span id="hud-hash">0x000000</span>
+      <span id="hud-fps">FPS --</span>
+    </div>
+    <div class="hud__col hud__col--right">
+      <span id="hud-tick">T+0.000</span>
+      <span id="hud-mouse">0,0</span>
+    </div>
+  </aside>
 
   <header class="head">
     <div class="head__inner">
       <a class="mark" href="#" data-magnetic>
-        <span class="mark__orb" aria-hidden="true"></span>
+        <span class="mark__hex" aria-hidden="true"></span>
         <span class="mark__txt">MIDYA<span>.CA</span></span>
       </a>
       <nav class="nav" aria-label="Primary">
         <button type="button" class="nav__btn" aria-expanded="false" aria-controls="nav-drawer">
-          <span class="nav__icon" aria-hidden="true"></span>
+          <span class="nav__icon"></span>
           <span class="sr-only">Menu</span>
         </button>
         <div id="nav-drawer" class="nav__drawer">
           <ul class="nav__list">
             <li><a href="#core" data-magnetic><em>01</em> Core</a></li>
-            <li><a href="#streams" data-magnetic><em>02</em> Streams</a></li>
-            <li><a href="#lattice" data-magnetic><em>03</em> Lattice</a></li>
-            <li><a href="#uplink" data-magnetic><em>04</em> Uplink</a></li>
+            <li><a href="#forge" data-magnetic><em>02</em> Forge</a></li>
+            <li><a href="#telemetry" data-magnetic><em>03</em> Telemetry</a></li>
+            <li><a href="#lattice" data-magnetic><em>04</em> Lattice</a></li>
+            <li><a href="#uplink" data-magnetic><em>05</em> Uplink</a></li>
           </ul>
         </div>
       </nav>
@@ -72,124 +80,173 @@
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-name">
-      <div class="hero__parallax" data-parallax="0.06"></div>
-      <div class="hero__wrap">
-        <p class="hero__pulse">
-          <span class="hero__dot" aria-hidden="true"></span>
-          ATLASSIAN ENGINEER · PLATFORM LAYER
-        </p>
-
-        <h1 id="hero-name" class="hero__name">
-          <span class="glitch" data-text="MIDYA RAHMANI">MIDYA RAHMANI</span>
-        </h1>
-
-        <p class="hero__tag" id="hero-scramble" data-scramble>
-          I engineer the living substrate behind Jira, Confluence, and JSM — schemas, automation, APIs, and the glue that keeps work observable.
-        </p>
-
-        <div class="hero__row">
-          <a class="chip chip--go" href="#lattice" data-magnetic>Explore lattice</a>
-          <a class="chip" href="#uplink" data-magnetic>Open uplink</a>
-        </div>
-
-        <div class="hero__viz" aria-hidden="true">
-          <div class="hero__orbit">
-            <span></span><span></span><span></span><span></span>
+      <div class="hero__glow" data-parallax="0.08"></div>
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <p class="hero__badge">
+            <span class="hero__pulse" aria-hidden="true"></span>
+            ATLASSIAN ENGINEER · SYSTEMS LAYER
+          </p>
+          <h1 id="hero-name" class="hero__name">
+            <span class="glitch" data-text="MIDYA RAHMANI">MIDYA RAHMANI</span>
+          </h1>
+          <p class="hero__tag" id="hero-scramble">
+            I engineer the substrate — Jira workflows, Confluence graphs, JSM queues, REST contracts, and automation that survives production traffic.
+          </p>
+          <div class="hero__stats" id="hero-stats">
+            <div class="stat"><span class="stat__n" data-count="12">0</span><span class="stat__l">yrs stack depth</span></div>
+            <div class="stat"><span class="stat__n" data-count="4">0</span><span class="stat__l">core products</span></div>
+            <div class="stat"><span class="stat__n" data-count="99">0</span><span class="stat__l">uptime mindset</span></div>
           </div>
-          <div class="hero__shard"></div>
+          <div class="hero__cta">
+            <a class="btn btn--prime" href="#forge" data-magnetic>Enter forge</a>
+            <a class="btn btn--ghost" href="#uplink" data-magnetic>Uplink</a>
+          </div>
+        </div>
+        <div class="hero__stage" aria-hidden="true">
+          <svg class="hero__svg" viewBox="0 0 400 400" id="hero-svg">
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#00ffe8" />
+                <stop offset="100%" stop-color="#ff006e" />
+              </linearGradient>
+            </defs>
+            <g class="hero__spokes" fill="none" stroke="url(#sg)" stroke-width="0.5" opacity="0.4"></g>
+            <circle class="hero__core" cx="200" cy="200" r="48" fill="none" stroke="#00ffe8" stroke-width="1" />
+            <circle class="hero__core hero__core--2" cx="200" cy="200" r="72" fill="none" stroke="#ff006e" stroke-width="0.5" opacity="0.5" />
+            <circle class="hero__core hero__core--3" cx="200" cy="200" r="110" fill="none" stroke="#00ffe8" stroke-width="0.3" opacity="0.25" />
+          </svg>
+          <div class="hero__prism"></div>
+          <ul class="hero__orbiters">
+            <li></li><li></li><li></li><li></li><li></li><li></li>
+          </ul>
         </div>
       </div>
     </section>
 
     <div class="ticker" aria-hidden="true">
-      <div class="ticker__track">
-        <span>JQL · workflow validators · scripted fields · REST v3 · webhooks · Insight assets · Forge runtime · DC clustering · index latency · OAuth2 · rate limits · changeItem logs · board swimlanes · CMDB sync ·</span>
-        <span>JQL · workflow validators · scripted fields · REST v3 · webhooks · Insight assets · Forge runtime · DC clustering · index latency · OAuth2 · rate limits · changeItem logs · board swimlanes · CMDB sync ·</span>
+      <div class="ticker__lane ticker__lane--a">
+        <span>JQL · validators · post-functions · REST v3 · webhooks · Forge · DC cluster · index · OAuth · automation · CMDB · swimlanes ·</span>
+        <span>JQL · validators · post-functions · REST v3 · webhooks · Forge · DC cluster · index · OAuth · automation · CMDB · swimlanes ·</span>
+      </div>
+      <div class="ticker__lane ticker__lane--b">
+        <span>workflowScheme · fieldConfig · permissionScheme · issueLink · remoteLink · boardConfig · sprint · epic · component ·</span>
+        <span>workflowScheme · fieldConfig · permissionScheme · issueLink · remoteLink · boardConfig · sprint · epic · component ·</span>
       </div>
     </div>
 
     <section id="core" class="band">
       <header class="band__hd reveal" data-reveal>
-        <span class="band__sig">NODE // CORE</span>
-        <h2 class="band__ttl">What I build on the stack</h2>
+        <span class="band__sig">SECTOR // CORE</span>
+        <h2 class="band__ttl">Engineering vectors</h2>
       </header>
-      <ul class="core">
-        <li class="core__card reveal" data-reveal data-tilt>
-          <div class="core__beam" aria-hidden="true"></div>
-          <h3>Execution fabric</h3>
-          <p>Workflows, conditions, validators, and post-functions tuned so state transitions stay honest under load.</p>
+      <ul class="deck">
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">01</span>
+          <h3>Workflow engine</h3>
+          <p>Conditions, validators, post-functions — transitions that stay truthful when concurrency spikes.</p>
         </li>
-        <li class="core__card reveal" data-reveal data-tilt>
-          <div class="core__beam" aria-hidden="true"></div>
-          <h3>Automation &amp; APIs</h3>
-          <p>Rules, webhooks, and REST integrations with retries, idempotency, and logs you can trace in the dark.</p>
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">02</span>
+          <h3>Automation mesh</h3>
+          <p>Rules + webhooks + idempotent handlers. Every side effect logged, every retry bounded.</p>
         </li>
-        <li class="core__card reveal" data-reveal data-tilt>
-          <div class="core__beam" aria-hidden="true"></div>
-          <h3>Data &amp; search shape</h3>
-          <p>Fields, contexts, indexing realities — engineering for JQL that stays fast as projects multiply.</p>
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">03</span>
+          <h3>Search &amp; schema</h3>
+          <p>Fields, contexts, indexing — JQL that scales when portfolios multiply.</p>
         </li>
-        <li class="core__card reveal" data-reveal data-tilt>
-          <div class="core__beam" aria-hidden="true"></div>
-          <h3>Reliability &amp; ops</h3>
-          <p>Upgrades, app matrix hygiene, observability hooks, and runbooks so the platform survives Friday afternoon.</p>
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">04</span>
+          <h3>Platform ops</h3>
+          <p>Upgrades, plugin matrix, observability hooks — Friday deploys without panic.</p>
+        </li>
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">05</span>
+          <h3>JSM fabric</h3>
+          <p>Queues, SLAs, assets, portals — service desks engineered like product surfaces.</p>
+        </li>
+        <li class="card reveal" data-reveal data-tilt data-glow>
+          <div class="card__scan"></div>
+          <span class="card__idx">06</span>
+          <h3>Dev graph</h3>
+          <p>Bitbucket ↔ Jira links, build status, deployment events in the work graph.</p>
         </li>
       </ul>
     </section>
 
-    <section id="streams" class="band band--dim">
+    <section id="forge" class="band band--forge">
       <header class="band__hd reveal" data-reveal>
-        <span class="band__sig">NODE // STREAMS</span>
-        <h2 class="band__ttl">Live signal (sample)</h2>
+        <span class="band__sig">SECTOR // FORGE</span>
+        <h2 class="band__ttl">Build pipeline</h2>
       </header>
-      <ul class="streams reveal" data-reveal>
-        <li><time>+000ms</time><code>issue.transitioned</code><span>workflow guard passed · payload 2.1kb</span></li>
-        <li><time>+042ms</time><code>webhook.delivery</code><span>200 · signed · retry=0</span></li>
-        <li><time>+118ms</time><code>automation.rule</code><span>branch edit · cascade child issues</span></li>
-        <li><time>+240ms</time><code>index.reconcile</code><span>JQL board cold cache refresh</span></li>
-        <li><time>+333ms</time><code>plugin.boundary</code><span>sandbox OK · heap stable</span></li>
-      </ul>
+      <div class="pipeline reveal" data-reveal>
+        <div class="pipeline__track">
+          <span class="pipeline__node pipeline__node--on">SPEC</span>
+          <span class="pipeline__line"></span>
+          <span class="pipeline__node pipeline__node--on">SCHEMA</span>
+          <span class="pipeline__line"></span>
+          <span class="pipeline__node pipeline__node--pulse">AUTOMATE</span>
+          <span class="pipeline__line"></span>
+          <span class="pipeline__node">OBSERVE</span>
+          <span class="pipeline__line"></span>
+          <span class="pipeline__node">SHIP</span>
+        </div>
+        <p class="pipeline__note">From issue type design to production automation — one continuous engineering loop.</p>
+      </div>
+    </section>
+
+    <section id="telemetry" class="band band--dim">
+      <header class="band__hd reveal" data-reveal>
+        <span class="band__sig">SECTOR // TELEMETRY</span>
+        <h2 class="band__ttl">Live event stream</h2>
+      </header>
+      <div class="term reveal" data-reveal>
+        <div class="term__chrome">
+          <span></span><span></span><span></span>
+          <code>tail -f /var/log/atlassian/events</code>
+        </div>
+        <ul class="term__feed" id="term-feed" aria-live="polite"></ul>
+      </div>
     </section>
 
     <section id="lattice" class="band">
       <header class="band__hd reveal" data-reveal>
-        <span class="band__sig">NODE // LATTICE</span>
-        <h2 class="band__ttl">Engineering lattice</h2>
+        <span class="band__sig">SECTOR // LATTICE</span>
+        <h2 class="band__ttl">Cross-product lattice</h2>
       </header>
-      <div class="lattice">
-        <article class="lattice__cell lattice__cell--wide reveal" data-reveal data-tilt>
-          <div class="lattice__scan" aria-hidden="true"></div>
-          <h3>Confluence + Jira coupling</h3>
-          <p>Macros, links, and metadata flows engineered so documentation and execution stay in lockstep — not two divergent truths.</p>
+      <div class="lattice reveal" data-reveal>
+        <article class="lattice__n lattice__n--hub" data-tilt>
+          <div class="lattice__pulse"></div>
+          <h3>Jira nucleus</h3>
+          <p>Issues, boards, workflows — the gravitational center.</p>
         </article>
-        <article class="lattice__cell reveal" data-reveal data-tilt>
-          <h3>JSM depth</h3>
-          <p>Queues, SLAs, assets, and portal UX wired to the same rigor as code paths.</p>
-        </article>
-        <article class="lattice__cell reveal" data-reveal data-tilt>
-          <h3>Bitbucket bridges</h3>
-          <p>Branch ↔ issue linking, build status surfaces, and pipeline events feeding the work graph.</p>
-        </article>
-        <article class="lattice__cell lattice__cell--tall reveal" data-reveal data-tilt>
-          <h3>Future channel</h3>
-          <p>Structured fields, clean events, and predictable APIs — the substrate that makes AI assistants accurate instead of theatrical.</p>
+        <article class="lattice__n" data-tilt><h3>Confluence</h3><p>Docs ↔ issues linked in one truth.</p></article>
+        <article class="lattice__n" data-tilt><h3>JSM</h3><p>Incidents, changes, assets.</p></article>
+        <article class="lattice__n" data-tilt><h3>Bitbucket</h3><p>Commits, PRs, deployments.</p></article>
+        <article class="lattice__n lattice__n--ai" data-tilt>
+          <h3>AI substrate</h3>
+          <p>Clean events + structured fields so copilots stay accurate.</p>
         </article>
       </div>
     </section>
 
     <section id="uplink" class="band band--end">
       <div class="uplink reveal" data-reveal>
-        <div class="uplink__aura" aria-hidden="true"><div class="uplink__auraSpin"></div></div>
-        <header class="uplink__hd">
-          <span class="uplink__sig">UPLINK</span>
-          <h2>Transmit</h2>
-        </header>
-        <p class="uplink__txt">Engineering collaborations, deep dives on automation, or platform firefighting — open a line.</p>
-        <div class="uplink__actions">
+        <div class="uplink__ring" aria-hidden="true"></div>
+        <span class="uplink__sig">UPLINK // OPEN</span>
+        <h2>Transmit signal</h2>
+        <p>Platform engineering, automation deep-dives, or incident response — open a channel.</p>
+        <div class="uplink__row">
           <a class="btn btn--prime" href="mailto:hello@midya.ca" data-magnetic>hello@midya.ca</a>
           <a class="btn btn--ghost" href="https://www.linkedin.com/in/your-profile" rel="noopener noreferrer" target="_blank" data-magnetic>LinkedIn</a>
         </div>
-        <p class="uplink__foot">© <span id="year"></span> Midya Rahmani</p>
+        <p class="uplink__foot">© <span id="year"></span> Midya Rahmani · midya.ca</p>
       </div>
     </section>
   </main>
