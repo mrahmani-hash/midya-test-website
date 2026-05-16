@@ -10,11 +10,11 @@
   var bootFill = document.getElementById("boot-fill");
   var bootLog = document.getElementById("boot-log");
   var bootLines = [
-    "LOADING ATLASSIAN RUNTIME…",
-    "MOUNTING WORKFLOW ENGINE…",
-    "INDEXING JQL CACHE…",
-    "BINDING WEBHOOK LISTENERS…",
-    "SYNC CONFLUENCE GRAPH…",
+    "LOADING PROFILE SIGNAL…",
+    "SYNC EDUCATION LAYER…",
+    "MOUNT EXPERIENCE MAP…",
+    "INDEX INTEREST STREAM…",
+    "CALIBRATING AI CHANNEL…",
     "UPLINK READY."
   ];
 
@@ -300,16 +300,16 @@
 
   /* ========== TERMINAL FEED ========== */
   var termEvents = [
-    ["issue.transitioned", "guard OK · 2.1kb"],
-    ["webhook.delivery", "HTTP 200 · signed"],
-    ["automation.rule", "cascade children · n=3"],
-    ["index.reconcile", "board cache warm"],
-    ["plugin.sandbox", "heap stable · 42ms"],
-    ["jql.parse", "query plan cached"],
-    ["field.update", "context PROJ-ENG"],
-    ["sla.timer", "breach avoided · -4m"],
-    ["forge.invoke", "resolver OK"],
-    ["cmdb.sync", "asset linked IT-4421"]
+    ["ai.trend.scan", "new model release noted"],
+    ["learning.update", "Waterloo · management science"],
+    ["interest.peak", "basketball · game night"],
+    ["ride.log", "motorcycle · route mapped"],
+    ["read.queue", "tech newsletter · 12 items"],
+    ["idea.capture", "product concept sketched"],
+    ["network.ping", "collaboration channel open"],
+    ["curiosity.mode", "exploring emerging tools"],
+    ["york.archive", "commerce + IT foundations"],
+    ["signal.strong", "midya.ca · online"]
   ];
 
   function initTerminal() {
