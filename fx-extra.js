@@ -507,66 +507,272 @@
     );
   }
 
-  /* ========== AUDIO ========== */
+  /* ========== AUDIO — Tron-style procedural score (D minor, ~120 BPM) ========== */
   var audioCtx = null;
   var masterGain = null;
   var sfxGain = null;
-  var ambientNodes = [];
+  var musicBus = null;
+  var musicNodes = [];
   var audioOn = false;
   var sfxOn = true;
-  var arpTimer = null;
 
-  function playBlip(freq, gain) {
+  var TRON_BPM = 120;
+  var TRON_ROOT = 73.42; /* D2 */
+  var TRON_SCALE = [0, 2, 3, 5, 7, 8, 10];
+  var TRON_ARP = [0, 3, 5, 7, 10, 7, 5, 3, 0, 5, 8, 10, 12, 10, 8, 5];
+  var TRON_BASS = [0, 0, 4, 4, 0, 0, 4, 4];
+  var musicSchedulerId = null;
+  var musicStep = 0;
+  var musicNext = 0;
+  var padFilter = null;
+  var padLfo = null;
+  var duckGain = null;
+
+  function scaleFreq(degree, baseOctave) {
+    var len = TRON_SCALE.length;
+    var idx = ((degree % len) + len) % len;
+    var oct = (baseOctave || 0) + Math.floor(degree / len);
+    return TRON_ROOT * Math.pow(2, (TRON_SCALE[idx] + oct * 12) / 12);
+  }
+
+  function playBlip(freq, gain, wave) {
     if (!audioCtx || !sfxGain || !sfxOn || !audioOn) return;
     var t = audioCtx.currentTime;
     var o = audioCtx.createOscillator();
     var g = audioCtx.createGain();
-    o.type = "sine";
+    var f = audioCtx.createBiquadFilter();
+    o.type = wave || "square";
     o.frequency.setValueAtTime(freq, t);
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(3200, t);
+    f.Q.value = 4;
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(gain, t + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-    o.connect(g);
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+    o.connect(f);
+    f.connect(g);
     g.connect(sfxGain);
     o.start(t);
-    o.stop(t + 0.14);
+    o.stop(t + 0.1);
+  }
+
+  function trackNode(node) {
+    musicNodes.push(node);
+    return node;
+  }
+
+  function playKick(time, intensity) {
+    var o = audioCtx.createOscillator();
+    var g = audioCtx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(140, time);
+    o.frequency.exponentialRampToValueAtTime(48, time + 0.11);
+    var vol = 0.22 + intensity * 0.12;
+    g.gain.setValueAtTime(0.0001, time);
+    g.gain.exponentialRampToValueAtTime(vol, time + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + 0.14);
+    o.connect(g);
+    g.connect(musicBus);
+    o.start(time);
+    o.stop(time + 0.16);
+    if (duckGain) {
+      duckGain.gain.cancelScheduledValues(time);
+      duckGain.gain.setValueAtTime(1, time);
+      duckGain.gain.setTargetAtTime(0.62, time, 0.018);
+      duckGain.gain.setTargetAtTime(1, time + 0.1, 0.08);
+    }
+  }
+
+  function playHat(time, intensity) {
+    var len = Math.floor(audioCtx.sampleRate * 0.04);
+    var buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+    var data = buf.getChannelData(0);
+    var i;
+    for (i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    var src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    var hp = audioCtx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 7000;
+    var g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.0001, time);
+    g.gain.exponentialRampToValueAtTime(0.035 + intensity * 0.02, time + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
+    src.connect(hp);
+    hp.connect(g);
+    g.connect(musicBus);
+    src.start(time);
+    src.stop(time + 0.05);
+  }
+
+  function playBass(time, degree, intensity) {
+    var o = audioCtx.createOscillator();
+    var g = audioCtx.createGain();
+    var lp = audioCtx.createBiquadFilter();
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(scaleFreq(degree, 1), time);
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(420 + intensity * 380, time);
+    lp.Q.value = 2;
+    g.gain.setValueAtTime(0.0001, time);
+    g.gain.linearRampToValueAtTime(0.11 + intensity * 0.06, time + 0.012);
+    g.gain.setValueAtTime(0.09 + intensity * 0.05, time + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + 0.2);
+    o.connect(lp);
+    lp.connect(g);
+    g.connect(musicBus);
+    o.start(time);
+    o.stop(time + 0.22);
+  }
+
+  function playArp(time, degree, intensity) {
+    var o = audioCtx.createOscillator();
+    var g = audioCtx.createGain();
+    var lp = audioCtx.createBiquadFilter();
+    o.type = "square";
+    o.frequency.setValueAtTime(scaleFreq(degree, 3), time);
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(1800 + intensity * 2200, time);
+    lp.Q.value = 6;
+    g.gain.setValueAtTime(0.0001, time);
+    g.gain.linearRampToValueAtTime(0.045 + intensity * 0.035, time + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + 0.11);
+    o.connect(lp);
+    lp.connect(g);
+    g.connect(musicBus);
+    o.start(time);
+    o.stop(time + 0.13);
+  }
+
+  function startPads(time) {
+    var mix = audioCtx.createGain();
+    mix.gain.value = 0.14;
+    padFilter = audioCtx.createBiquadFilter();
+    padFilter.type = "lowpass";
+    padFilter.frequency.value = 520;
+    padFilter.Q.value = 0.7;
+    padLfo = audioCtx.createOscillator();
+    var lfoGain = audioCtx.createGain();
+    padLfo.type = "sine";
+    padLfo.frequency.value = 0.07;
+    lfoGain.gain.value = 380;
+    padLfo.connect(lfoGain);
+    lfoGain.connect(padFilter.frequency);
+    mix.connect(padFilter);
+    padFilter.connect(duckGain || musicBus);
+
+    [0, 3, 7].forEach(function (deg, i) {
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      o.type = "sawtooth";
+      o.frequency.value = scaleFreq(deg, 2);
+      o.detune.value = i === 0 ? -8 : i === 1 ? 6 : -3;
+      g.gain.value = 0.22 - i * 0.04;
+      o.connect(g);
+      g.connect(mix);
+      o.start(time);
+      trackNode(o);
+    });
+    padLfo.start(time);
+    trackNode(padLfo);
+    trackNode(mix);
+  }
+
+  function scheduleMusicStep() {
+    if (!audioCtx || !audioOn) return;
+    var sixteenth = 60 / TRON_BPM / 4;
+    var horizon = audioCtx.currentTime + 0.12;
+    var intensity = 0.35 + scrollCharge * 0.65;
+
+    while (musicNext < horizon) {
+      var t = musicNext;
+      var step = musicStep % 16;
+      var beat = step % 4;
+
+      if (beat === 0) playKick(t, intensity);
+      if (step % 2 === 1) playHat(t, intensity * 0.85);
+      if (step % 2 === 0) playBass(t, TRON_BASS[step % TRON_BASS.length], intensity);
+      playArp(t, TRON_ARP[step % TRON_ARP.length], intensity);
+
+      musicStep++;
+      musicNext += sixteenth;
+    }
+
+    if (musicSchedulerId) clearTimeout(musicSchedulerId);
+    musicSchedulerId = setTimeout(scheduleMusicStep, 28);
   }
 
   function startAmbient() {
     if (!audioCtx) return;
-    var t = audioCtx.currentTime;
-    var freqs = [55, 82.5, 110, 164.81];
-    freqs.forEach(function (f, i) {
-      var o = audioCtx.createOscillator();
-      var g = audioCtx.createGain();
-      o.type = i % 2 ? "triangle" : "sine";
-      o.frequency.setValueAtTime(f, t);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.018 + i * 0.004, t + 2);
-      o.connect(g);
-      g.connect(masterGain);
-      o.start(t);
-      ambientNodes.push(o);
-    });
+    var t = audioCtx.currentTime + 0.05;
 
-    var arpNotes = [220, 261.63, 329.63, 392, 493.88, 587.33];
-    var arpIdx = 0;
-    arpTimer = setInterval(function () {
-      if (!audioOn) return;
-      playBlip(arpNotes[arpIdx % arpNotes.length] * (Math.random() > 0.85 ? 2 : 1), 0.025);
-      arpIdx++;
-    }, 1400);
+    duckGain = audioCtx.createGain();
+    duckGain.gain.value = 1;
+    duckGain.connect(masterGain);
+
+    musicBus = audioCtx.createGain();
+    musicBus.gain.setValueAtTime(0.0001, t);
+    musicBus.gain.linearRampToValueAtTime(0.85, t + 1.8);
+    musicBus.connect(duckGain);
+
+    var delay = audioCtx.createDelay(0.6);
+    delay.delayTime.value = sixteenthDelay();
+    var fb = audioCtx.createGain();
+    fb.gain.value = 0.32;
+    var delayMix = audioCtx.createGain();
+    delayMix.gain.value = 0.38;
+    musicBus.connect(delay);
+    delay.connect(fb);
+    fb.connect(delay);
+    delay.connect(delayMix);
+    delayMix.connect(duckGain);
+    trackNode(delay);
+    trackNode(fb);
+    trackNode(delayMix);
+
+    startPads(t);
+    musicStep = 0;
+    musicNext = t;
+    scheduleMusicStep();
+  }
+
+  function sixteenthDelay() {
+    return 60 / TRON_BPM / 4 * 3;
   }
 
   function stopAmbient() {
-    ambientNodes.forEach(function (o) {
+    if (musicSchedulerId) {
+      clearTimeout(musicSchedulerId);
+      musicSchedulerId = null;
+    }
+    musicNodes.forEach(function (node) {
       try {
-        o.stop();
+        if (node.stop) node.stop();
+        if (node.disconnect) node.disconnect();
       } catch (e) {}
     });
-    ambientNodes = [];
-    if (arpTimer) clearInterval(arpTimer);
-    arpTimer = null;
+    musicNodes = [];
+    if (padLfo) {
+      try {
+        padLfo.stop();
+      } catch (e2) {}
+    }
+    padFilter = null;
+    padLfo = null;
+    if (duckGain) {
+      try {
+        duckGain.disconnect();
+      } catch (e3) {}
+    }
+    duckGain = null;
+    if (musicBus) {
+      try {
+        musicBus.disconnect();
+      } catch (e4) {}
+    }
+    musicBus = null;
+    musicStep = 0;
+    musicNext = 0;
   }
 
   function initAudio() {
@@ -584,23 +790,27 @@
         masterGain.connect(audioCtx.destination);
         sfxGain.connect(audioCtx.destination);
         masterGain.gain.value = (vol ? vol.value : 35) / 400;
-        sfxGain.gain.value = 0.12;
+        sfxGain.gain.value = 0.1;
       }
-      if (audioCtx.state === "suspended") audioCtx.resume();
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
 
       audioOn = !audioOn;
       toggle.setAttribute("aria-pressed", audioOn ? "true" : "false");
       toggle.querySelector(".audio-panel__label").textContent = audioOn
-        ? "AUDIO LIVE"
-        : "ACTIVATE AUDIO";
+        ? "GRID LIVE"
+        : "ACTIVATE SOUNDTRACK";
       toggle.classList.toggle("is-live", audioOn);
       if (controls) controls.hidden = !audioOn;
 
       if (audioOn) {
         startAmbient();
-        playBlip(660, 0.08);
+        playBlip(587.33, 0.07, "square");
         triggerFlash(0.5);
-      } else stopAmbient();
+      } else {
+        stopAmbient();
+      }
     });
 
     if (vol) {
@@ -622,7 +832,7 @@
         "mouseenter",
         function () {
           if (!audioOn) return;
-          playBlip(400 + Math.random() * 300, 0.015);
+          playBlip(440 + Math.random() * 280, 0.012, "square");
         },
         { passive: true }
       );
