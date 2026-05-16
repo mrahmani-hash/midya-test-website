@@ -472,6 +472,7 @@ body {
 .hud {
   position: fixed; top: calc(var(--head) + 6px);
   left: 12px; right: 12px; z-index: 40;
+  pointer-events: none;
   display: flex; justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -568,10 +569,27 @@ main { position: relative; z-index: 3; }
   position: absolute; inset: 0;
   background: radial-gradient(ellipse 60% 50% at 60% 40%, rgba(0,255,232,0.1), transparent 65%);
   will-change: transform;
+  pointer-events: none;
+  z-index: 0;
 }
 .hero__grid {
+  position: relative;
+  z-index: 1;
   max-width: var(--max); margin: 0 auto; width: 100%;
   display: grid; gap: 40px; align-items: center;
+}
+.hero__copy {
+  position: relative;
+  z-index: 2;
+}
+.hero__cta {
+  position: relative;
+  z-index: 3;
+}
+.hero__cta .btn {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 @media (min-width: 960px) {
   .hero__grid { grid-template-columns: 1.05fr 0.95fr; }
