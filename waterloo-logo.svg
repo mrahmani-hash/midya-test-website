@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 88" role="img" aria-label="University of Waterloo">
+  <defs>
+    <linearGradient id="uw-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="45%" stop-color="#ffb81c"/>
+      <stop offset="100%" stop-color="#d4920a"/>
+    </linearGradient>
+    <linearGradient id="uw-shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="312" height="80" rx="10" fill="rgba(0,0,0,0.35)" stroke="rgba(255,184,28,0.45)" stroke-width="1"/>
+  <rect x="4" y="4" width="312" height="40" rx="10" fill="url(#uw-shine)"/>
+  <text x="160" y="34" text-anchor="middle" fill="url(#uw-gold)" font-family="Arial Black, Helvetica Neue, sans-serif" font-size="26" font-weight="900" letter-spacing="0.06em">WATERLOO</text>
+  <text x="160" y="58" text-anchor="middle" fill="#b8c5d0" font-family="Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="0.42em">UNIVERSITY OF</text>
+  <circle cx="28" cy="44" r="10" fill="none" stroke="#ffb81c" stroke-width="1.5" opacity="0.8"/>
+  <path d="M28 36 L32 44 L28 52 L24 44 Z" fill="#ffb81c" opacity="0.9"/>
+</svg>
