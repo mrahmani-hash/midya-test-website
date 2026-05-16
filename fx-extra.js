@@ -9,14 +9,35 @@
   var lastScrollT = performance.now();
   var meshBoost = 1;
   var bursts = [];
+  var overlays = [];
+  var debris = [];
   var burstCanvas = document.getElementById("field-burst");
   var burstCtx = burstCanvas && burstCanvas.getContext ? burstCanvas.getContext("2d") : null;
+  var debrisCanvas = document.getElementById("field-debris");
+  var debrisCtx = debrisCanvas && debrisCanvas.getContext ? debrisCanvas.getContext("2d") : null;
   var flashEl = document.getElementById("scroll-flash");
   var ripplesRoot = document.getElementById("ripples");
   var hudScroll = document.getElementById("hud-scroll");
   var fxMesh = document.querySelector(".fx__mesh");
   var fxHex = document.querySelector(".fx__hexfield");
   var body = document.body;
+
+  var SHAPE_KINDS = ["dot", "tri", "hex", "diamond", "line", "grid"];
+
+  function pickShape() {
+    var r = Math.random();
+    if (r < 0.12) return "dot";
+    if (r < 0.32) return "tri";
+    if (r < 0.52) return "hex";
+    if (r < 0.72) return "diamond";
+    if (r < 0.88) return "line";
+    return "grid";
+  }
+
+  function burstCount(intensity) {
+    var base = 36 + (Math.random() * 28) | 0;
+    return Math.min(140, Math.floor(base * (1 + scrollCharge * 2.2) * intensity));
+  }
 
   /* ========== ADVANCED REVEAL ========== */
   function initAdvancedReveal() {
@@ -25,7 +46,7 @@
     document.querySelectorAll("[data-stagger]").forEach(function (container) {
       var kids = container.children;
       for (var i = 0; i < kids.length; i++) {
-        kids[i].classList.add("reveal", "reveal--stagger");
+        kids[i].classList.add("reveal", "reveal--stagger", "reveal--geo");
         kids[i].style.setProperty("--reveal-i", String(i));
         if (!kids[i].hasAttribute("data-reveal")) kids[i].setAttribute("data-reveal", "");
       }
@@ -39,14 +60,14 @@
           el.classList.add("is-visible");
           if (el.classList.contains("reveal--blast")) {
             el.classList.add("is-blast");
-            spawnBurstAt(el);
-            triggerFlash(0.35);
+            spawnBurstAt(el, 1.15);
+            triggerFlash(0.4);
           }
           if (el.closest("[data-section]")) {
             body.classList.add("is-section-active");
             setTimeout(function () {
               body.classList.remove("is-section-active");
-            }, 420);
+            }, 480);
           }
           io.unobserve(el);
         });
@@ -64,8 +85,12 @@
         function (entries) {
           if (!entries[0].isIntersecting) return;
           sec.classList.add("is-inview");
-          spawnBurstAt(sec.querySelector(".band__hd") || sec);
-          triggerFlash(0.55);
+          var hd = sec.querySelector(".band__hd");
+          if (hd) hd.classList.add("is-frame-live");
+          spawnBurstAt(hd || sec, 1.65);
+          spawnSpokeOverlay(sec);
+          spawnGridOverlay(sec);
+          triggerFlash(0.62);
           if (audioOn) playBlip(880, 0.04);
         },
         { threshold: 0.22 }
@@ -77,6 +102,7 @@
   /* ========== SCROLL PARALLAX & CHARGE ========== */
   function initScrollDynamics() {
     var bands = document.querySelectorAll(".band--fx");
+    var scrollBurstCooldown = 0;
 
     function onScroll() {
       var y = window.scrollY;
@@ -86,8 +112,8 @@
       lastScrollY = y;
       lastScrollT = now;
 
-      scrollCharge = Math.min(1, scrollCharge * 0.92 + vel * 0.08);
-      meshBoost = 1 + scrollCharge * 1.8;
+      scrollCharge = Math.min(1, scrollCharge * 0.9 + vel * 0.1);
+      meshBoost = 1 + scrollCharge * 2.4;
       body.style.setProperty("--scroll-charge", scrollCharge.toFixed(3));
 
       if (hudScroll) {
@@ -98,10 +124,18 @@
 
       if (fxMesh) {
         fxMesh.style.transform =
-          "translateY(" + y * 0.06 + "px) scale(" + (1 + scrollCharge * 0.04) + ")";
+          "translateY(" +
+          y * 0.06 +
+          "px) scale(" +
+          (1 + scrollCharge * 0.06) +
+          ") rotate(" +
+          scrollCharge * 0.8 +
+          "deg)";
       }
       if (fxHex) {
-        fxHex.style.transform = "translateY(" + y * -0.04 + "px)";
+        fxHex.style.transform =
+          "translateY(" + y * -0.04 + "px) scale(" + (1 + scrollCharge * 0.08) + ")";
+        fxHex.style.opacity = String(0.55 + scrollCharge * 0.45);
       }
 
       bands.forEach(function (b) {
@@ -111,8 +145,27 @@
         b.style.setProperty("--parallax-y", offset + "px");
       });
 
-      if (vel > 2.2 && Math.random() > 0.7) {
-        triggerFlash(0.15);
+      if (vel > 1.8 && now > scrollBurstCooldown) {
+        var chance = 0.35 + scrollCharge * 0.45;
+        if (Math.random() < chance) {
+          scrollBurstCooldown = now + 90;
+          spawnScrollBurst(
+            window.innerWidth * (0.25 + Math.random() * 0.5),
+            window.innerHeight * (0.2 + Math.random() * 0.55)
+          );
+        }
+      }
+
+      if (vel > 2.8) {
+        triggerFlash(0.12 + scrollCharge * 0.22);
+        if (Math.random() > 0.55) spawnVelocityGrid();
+      }
+
+      if (vel > 4.2 && Math.random() > 0.65) {
+        spawnDebrisShard(
+          window.innerWidth * Math.random(),
+          window.innerHeight * 0.35 + Math.random() * window.innerHeight * 0.35
+        );
       }
     }
 
@@ -131,45 +184,285 @@
     burstCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function spawnBurstAt(el) {
+  function resizeDebris() {
+    if (!debrisCanvas || !debrisCtx) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    debrisCanvas.width = window.innerWidth * dpr;
+    debrisCanvas.height = window.innerHeight * dpr;
+    debrisCanvas.style.width = window.innerWidth + "px";
+    debrisCanvas.style.height = window.innerHeight + "px";
+    debrisCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function makeParticle(cx, cy, intensity, wire) {
+    var a = Math.random() * Math.PI * 2;
+    var sp = (2.5 + Math.random() * 9) * (0.85 + scrollCharge * 0.65) * intensity;
+    return {
+      x: cx + (Math.random() - 0.5) * 12,
+      y: cy + (Math.random() - 0.5) * 12,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      life: 1,
+      hue: Math.random() > 0.45 ? 170 : 195 + Math.random() * 45,
+      size: 2.5 + Math.random() * 5.5,
+      rot: Math.random() * Math.PI * 2,
+      rotSpd: (Math.random() - 0.5) * 0.22,
+      kind: pickShape(),
+      wire: wire || Math.random() > 0.55
+    };
+  }
+
+  function spawnBurstAt(el, intensity) {
     if (!burstCtx || !el) return;
+    intensity = intensity || 1;
     var r = el.getBoundingClientRect();
     var cx = r.left + r.width / 2;
     var cy = r.top + r.height / 2;
-    var n = 28 + (Math.random() * 20) | 0;
-    for (var i = 0; i < n; i++) {
-      var a = Math.random() * Math.PI * 2;
-      var sp = 2 + Math.random() * 7;
-      bursts.push({
-        x: cx,
-        y: cy,
-        vx: Math.cos(a) * sp,
-        vy: Math.sin(a) * sp,
-        life: 1,
-        hue: Math.random() > 0.5 ? 170 : 200 + Math.random() * 40,
-        r: 1 + Math.random() * 2.5
-      });
+    var n = burstCount(intensity);
+    var i;
+    for (i = 0; i < n; i++) {
+      bursts.push(makeParticle(cx, cy, intensity, i % 3 === 0));
+    }
+    spawnSpokeOverlayAt(cx, cy, 0.7 + intensity * 0.35);
+    spawnGridOverlayAt(cx, cy, 0.55 + intensity * 0.3);
+    for (i = 0; i < 4; i++) {
+      spawnDebrisShard(cx, cy);
+    }
+  }
+
+  function spawnScrollBurst(x, y) {
+    if (!burstCtx) return;
+    var n = Math.floor(12 + scrollCharge * 22);
+    var i;
+    for (i = 0; i < n; i++) {
+      bursts.push(makeParticle(x, y, 0.65 + scrollCharge * 0.5, true));
+    }
+    if (scrollCharge > 0.35) spawnSpokeOverlayAt(x, y, 0.35 + scrollCharge * 0.4);
+  }
+
+  function spawnSpokeOverlay(sec) {
+    var r = sec.getBoundingClientRect();
+    spawnSpokeOverlayAt(r.left + r.width / 2, r.top + r.height * 0.25, 1);
+  }
+
+  function spawnGridOverlay(sec) {
+    var r = sec.getBoundingClientRect();
+    spawnGridOverlayAt(r.left + r.width / 2, r.top + r.height * 0.35, 0.9);
+  }
+
+  function spawnSpokeOverlayAt(cx, cy, power) {
+    overlays.push({
+      type: "spokes",
+      cx: cx,
+      cy: cy,
+      life: 1,
+      power: power,
+      count: 10 + (power * 8) | 0,
+      rot: Math.random() * Math.PI
+    });
+  }
+
+  function spawnGridOverlayAt(cx, cy, power) {
+    overlays.push({
+      type: "grid",
+      cx: cx,
+      cy: cy,
+      life: 1,
+      power: power,
+      span: 40 + power * 70
+    });
+  }
+
+  function spawnVelocityGrid() {
+    if (!burstCtx) return;
+    overlays.push({
+      type: "grid",
+      cx: window.innerWidth * Math.random(),
+      cy: window.innerHeight * Math.random(),
+      life: 0.85,
+      power: 0.45 + scrollCharge * 0.55,
+      span: 30 + scrollCharge * 50
+    });
+  }
+
+  function spawnDebrisShard(x, y) {
+    if (!debrisCtx) return;
+    var kinds = ["tri", "hex", "diamond", "line"];
+    debris.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 3,
+      vy: -1 - Math.random() * 4,
+      rot: Math.random() * Math.PI * 2,
+      rotSpd: (Math.random() - 0.5) * 0.12,
+      life: 1,
+      size: 4 + Math.random() * 10,
+      hue: Math.random() > 0.5 ? 170 : 205,
+      kind: kinds[(Math.random() * kinds.length) | 0]
+    });
+  }
+
+  function drawShape(ctx, p) {
+    var s = p.size * p.life * (p.kind === "dot" ? 0.55 : 1);
+    var alpha = p.life * 0.88;
+    ctx.strokeStyle = "hsla(" + p.hue + ",100%,68%," + alpha + ")";
+    ctx.fillStyle = "hsla(" + p.hue + ",100%,62%," + (alpha * 0.75) + ")";
+    ctx.lineWidth = p.wire ? 1.4 : 1;
+
+    if (p.kind === "dot") {
+      ctx.beginPath();
+      ctx.arc(0, 0, Math.max(0.5, s * 0.45), 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+
+    if (p.kind === "line") {
+      ctx.beginPath();
+      ctx.moveTo(-s, 0);
+      ctx.lineTo(s, 0);
+      ctx.stroke();
+      return;
+    }
+
+    if (p.kind === "grid") {
+      ctx.beginPath();
+      ctx.moveTo(-s, 0);
+      ctx.lineTo(s, 0);
+      ctx.moveTo(0, -s);
+      ctx.lineTo(0, s);
+      ctx.stroke();
+      ctx.strokeRect(-s * 0.6, -s * 0.6, s * 1.2, s * 1.2);
+      return;
+    }
+
+    ctx.beginPath();
+    if (p.kind === "tri") {
+      ctx.moveTo(0, -s);
+      ctx.lineTo(s * 0.92, s * 0.55);
+      ctx.lineTo(-s * 0.92, s * 0.55);
+    } else if (p.kind === "diamond") {
+      ctx.moveTo(0, -s);
+      ctx.lineTo(s, 0);
+      ctx.lineTo(0, s);
+      ctx.lineTo(-s, 0);
+    } else {
+      var i;
+      for (i = 0; i < 6; i++) {
+        var ang = (i / 6) * Math.PI * 2 - Math.PI / 2;
+        var px = Math.cos(ang) * s;
+        var py = Math.sin(ang) * s;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+    }
+    ctx.closePath();
+    if (p.wire) ctx.stroke();
+    else {
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  function drawOverlays(ctx) {
+    var i;
+    for (i = overlays.length - 1; i >= 0; i--) {
+      var o = overlays[i];
+      o.life -= 0.034;
+      if (o.life <= 0) {
+        overlays.splice(i, 1);
+        continue;
+      }
+      var a = o.life * o.power * 0.55;
+      ctx.save();
+      ctx.translate(o.cx, o.cy);
+      if (o.type === "spokes") {
+        ctx.rotate(o.rot + (1 - o.life) * 0.4);
+        var j;
+        var spokes = o.count;
+        var rad = (60 + o.power * 90) * (1.1 - o.life * 0.35);
+        ctx.strokeStyle = "rgba(0,255,232," + a + ")";
+        ctx.lineWidth = 1;
+        for (j = 0; j < spokes; j++) {
+          var ang = (j / spokes) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang) * rad, Math.sin(ang) * rad);
+          ctx.stroke();
+        }
+      } else {
+        var span = o.span * (0.6 + (1 - o.life) * 0.9);
+        ctx.strokeStyle = "rgba(0,180,255," + a + ")";
+        ctx.lineWidth = 0.8;
+        var step = 14;
+        var gx;
+        for (gx = -span; gx <= span; gx += step) {
+          ctx.beginPath();
+          ctx.moveTo(gx, -span);
+          ctx.lineTo(gx, span);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(-span, gx);
+          ctx.lineTo(span, gx);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
     }
   }
 
   function stepBursts() {
     if (!burstCtx) return;
     burstCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    for (var i = bursts.length - 1; i >= 0; i--) {
+    drawOverlays(burstCtx);
+
+    var i;
+    for (i = bursts.length - 1; i >= 0; i--) {
       var p = bursts[i];
       p.x += p.vx * meshBoost;
       p.y += p.vy * meshBoost;
-      p.life -= 0.028;
+      p.rot += p.rotSpd;
+      p.life -= 0.024;
       if (p.life <= 0) {
         bursts.splice(i, 1);
         continue;
       }
-      burstCtx.fillStyle = "hsla(" + p.hue + ",100%,65%," + p.life * 0.85 + ")";
-      burstCtx.beginPath();
-      burstCtx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
-      burstCtx.fill();
+      burstCtx.save();
+      burstCtx.translate(p.x, p.y);
+      burstCtx.rotate(p.rot);
+      drawShape(burstCtx, p);
+      burstCtx.restore();
     }
     requestAnimationFrame(stepBursts);
+  }
+
+  function stepDebris() {
+    if (!debrisCtx) return;
+    debrisCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    var i;
+    for (i = debris.length - 1; i >= 0; i--) {
+      var d = debris[i];
+      d.x += d.vx * (0.8 + scrollCharge * 0.6);
+      d.y += d.vy * (0.8 + scrollCharge * 0.6);
+      d.vy += 0.06;
+      d.rot += d.rotSpd;
+      d.life -= 0.012;
+      if (d.life <= 0 || d.y > window.innerHeight + 40) {
+        debris.splice(i, 1);
+        continue;
+      }
+      debrisCtx.save();
+      debrisCtx.translate(d.x, d.y);
+      debrisCtx.rotate(d.rot);
+      drawShape(debrisCtx, {
+        kind: d.kind,
+        size: d.size,
+        life: d.life,
+        hue: d.hue,
+        wire: true
+      });
+      debrisCtx.restore();
+    }
+    requestAnimationFrame(stepDebris);
   }
 
   function initBurstCanvas() {
@@ -177,6 +470,13 @@
     resizeBurst();
     window.addEventListener("resize", resizeBurst);
     requestAnimationFrame(stepBursts);
+  }
+
+  function initDebrisCanvas() {
+    if (!debrisCanvas) return;
+    resizeDebris();
+    window.addEventListener("resize", resizeDebris);
+    requestAnimationFrame(stepDebris);
   }
 
   function triggerFlash(intensity) {
@@ -194,7 +494,7 @@
       "click",
       function (e) {
         var ripple = document.createElement("span");
-        ripple.className = "ripple";
+        ripple.className = "ripple ripple--geo";
         ripple.style.left = e.clientX + "px";
         ripple.style.top = e.clientY + "px";
         ripplesRoot.appendChild(ripple);
@@ -340,7 +640,9 @@
           pos = 0;
           body.classList.add("is-overdrive");
           triggerFlash(0.9);
-          for (var i = 0; i < 5; i++) spawnBurstAt(document.body);
+          for (var i = 0; i < 8; i++) {
+            spawnBurstAt(document.body, 1.2);
+          }
           playBlip(1200, 0.1);
           setTimeout(function () {
             body.classList.remove("is-overdrive");
@@ -354,6 +656,7 @@
     initAdvancedReveal();
     initScrollDynamics();
     initBurstCanvas();
+    initDebrisCanvas();
     initRipples();
     initAudio();
     initKonami();

@@ -475,6 +475,21 @@
         ctx.fill();
       }
 
+      if (boost > 2.2 && particles.length > 8) {
+        var hub = particles[(frames >> 2) % particles.length];
+        var spokeN = 6 + ((boost * 3) | 0);
+        var sr = 28 + boost * 22;
+        ctx.strokeStyle = "rgba(0,255,232," + Math.min(0.35, (boost - 2) * 0.12) + ")";
+        ctx.lineWidth = 0.6;
+        for (var si = 0; si < spokeN; si++) {
+          var sa = (si / spokeN) * Math.PI * 2 + hue * 0.02;
+          ctx.beginPath();
+          ctx.moveTo(hub.x, hub.y);
+          ctx.lineTo(hub.x + Math.cos(sa) * sr, hub.y + Math.sin(sa) * sr);
+          ctx.stroke();
+        }
+      }
+
       requestAnimationFrame(step);
     }
 

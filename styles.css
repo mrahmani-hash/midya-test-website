@@ -45,6 +45,8 @@ body.is-section-active {
 }
 body.is-overdrive .layer--mesh { opacity: 1; }
 body.is-overdrive .fx__hexfield { animation-duration: 18s; }
+body.is-overdrive .layer--burst,
+body.is-overdrive .layer--debris { opacity: 1; }
 @keyframes sectionShake {
   0%, 100% { transform: translateX(0); }
   20% { transform: translateX(-3px); }
@@ -127,6 +129,7 @@ body.is-overdrive .fx__hexfield { animation-duration: 18s; }
 .layer--rain { z-index: 1; opacity: 0.4; mix-blend-mode: screen; }
 .layer--flare { z-index: 2; opacity: 0.55; mix-blend-mode: screen; pointer-events: none; }
 .layer--burst { z-index: 4; opacity: 0.95; mix-blend-mode: screen; pointer-events: none; }
+.layer--debris { z-index: 3; opacity: 0.82; mix-blend-mode: screen; pointer-events: none; }
 
 .fx__mesh {
   position: absolute; inset: -30%;
@@ -458,6 +461,7 @@ body.is-overdrive .fx__hexfield { animation-duration: 18s; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L56 16v32L28 64 0 48V16z' fill='none' stroke='%2300ffe8' stroke-opacity='0.06'/%3E%3C/svg%3E");
   animation: hexDrift 60s linear infinite;
   opacity: 0.8;
+  transition: opacity 0.25s ease-out, transform 0.2s ease-out;
 }
 @keyframes hexDrift {
   to { transform: translate(-56px, -100px); }
@@ -599,10 +603,23 @@ body.is-overdrive .fx__hexfield { animation-duration: 18s; }
 .scroll-flash.is-flash {
   animation: scrollFlash 0.55s ease-out;
 }
+.scroll-flash.is-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 24px,
+    rgba(0, 255, 232, calc(0.04 * var(--flash-i, 0.4))) 24px,
+    rgba(0, 255, 232, calc(0.04 * var(--flash-i, 0.4))) 25px
+  );
+  pointer-events: none;
+}
 @keyframes scrollFlash {
-  0% { opacity: 0; transform: translateX(-30%) skewX(-8deg); }
+  0% { opacity: 0; transform: translateX(-30%) skewX(-8deg) scaleY(0.6); }
   30% { opacity: 1; }
-  100% { opacity: 0; transform: translateX(30%) skewX(-8deg); }
+  100% { opacity: 0; transform: translateX(30%) skewX(-8deg) scaleY(1.1); }
 }
 .ripples { position: fixed; inset: 0; z-index: 45; pointer-events: none; overflow: hidden; }
 .ripple {
@@ -617,6 +634,18 @@ body.is-overdrive .fx__hexfield { animation-duration: 18s; }
 }
 @keyframes rippleOut {
   to { transform: scale(18); opacity: 0; border-color: var(--arc); }
+}
+.ripple--geo {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: rippleGeo 0.85s ease-out forwards;
+}
+@keyframes rippleGeo {
+  to {
+    transform: scale(16) rotate(45deg);
+    opacity: 0;
+    border-color: var(--violet);
+  }
 }
 
 /* Band scroll FX */
@@ -656,7 +685,89 @@ body.is-overdrive .fx__hexfield { animation-duration: 18s; }
   100% { opacity: 0.35; transform: scaleX(1); }
 }
 .band--fx.is-inview .band__ttl {
-  text-shadow: 0 0 40px rgba(0, 255, 232, 0.35);
+  text-shadow: 0 0 calc(24px + 40px * var(--scroll-charge, 0)) rgba(0, 255, 232, 0.35);
+}
+.band--fx.is-inview::before,
+.band--fx.is-inview::after {
+  animation-duration: calc(1.1s - 0.35s * var(--scroll-charge, 0));
+}
+.band--fx.is-inview {
+  animation: bandNeonSweep 1.4s ease-out;
+}
+@keyframes bandNeonSweep {
+  0% {
+    box-shadow: inset 0 0 0 rgba(0, 255, 232, 0);
+  }
+  35% {
+    box-shadow:
+      inset 0 1px 0 rgba(0, 255, 232, calc(0.25 + var(--scroll-charge, 0) * 0.35)),
+      inset 0 -1px 0 rgba(0, 180, 255, calc(0.2 + var(--scroll-charge, 0) * 0.3));
+  }
+  100% {
+    box-shadow: inset 0 0 0 rgba(0, 255, 232, 0);
+  }
+}
+
+/* Section header geometric frame */
+.band__hd.reveal--geo-hd {
+  position: relative;
+  display: inline-block;
+  padding: 16px 28px 20px;
+  margin-bottom: 4px;
+  max-width: 100%;
+}
+.band__hd-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(0, 255, 232, 0.2);
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+  opacity: 0;
+  transform: scale(0.92) rotate(-2deg);
+  transition: opacity 0.5s, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.band__hd-frame::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--void), var(--void)) padding-box,
+    conic-gradient(from 0deg, var(--neo), transparent 35%, var(--arc), transparent 65%, var(--violet), var(--neo)) border-box;
+  opacity: 0.55;
+  animation: hdHexSpin 14s linear infinite;
+}
+.band__hd-frame::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  background:
+    linear-gradient(var(--neo), var(--neo)) top left / 14px 2px no-repeat,
+    linear-gradient(var(--neo), var(--neo)) top left / 2px 14px no-repeat,
+    linear-gradient(var(--arc), var(--arc)) top right / 14px 2px no-repeat,
+    linear-gradient(var(--arc), var(--arc)) top right / 2px 14px no-repeat,
+    linear-gradient(var(--violet), var(--violet)) bottom left / 14px 2px no-repeat,
+    linear-gradient(var(--violet), var(--violet)) bottom left / 2px 14px no-repeat,
+    linear-gradient(var(--neo), var(--neo)) bottom right / 14px 2px no-repeat,
+    linear-gradient(var(--neo), var(--neo)) bottom right / 2px 14px no-repeat;
+  opacity: 0.7;
+}
+@keyframes hdHexSpin {
+  to { transform: rotate(360deg); }
+}
+.band__hd.is-visible .band__hd-frame,
+.band__hd.is-frame-live .band__hd-frame {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+.band__hd.is-blast .band__hd-frame::before {
+  animation-duration: 4s;
+  opacity: 0.95;
+}
+.band__hd > *:not(.band__hd-frame) {
+  position: relative;
+  z-index: 1;
 }
 
 /* Header */
@@ -1430,21 +1541,35 @@ main { position: relative; z-index: 3; }
 .reveal--blast.is-visible {
   animation: revealBlast 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+.reveal--geo {
+  clip-path: polygon(50% 18%, 82% 32%, 82% 68%, 50% 82%, 18% 68%, 18% 32%);
+}
+.reveal--geo.is-visible {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition:
+    clip-path 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s ease;
+}
 @keyframes revealBlast {
   0% {
     opacity: 0;
-    transform: scale(0.85) translateY(40px);
-    filter: blur(12px);
+    transform: scale(0.75) translateY(48px) rotate(-6deg);
+    filter: blur(14px);
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%);
   }
-  60% {
+  55% {
     opacity: 1;
-    transform: scale(1.03) translateY(-4px);
+    transform: scale(1.06) translateY(-6px) rotate(2deg);
     filter: blur(0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
   100% {
     opacity: 1;
     transform: none;
     filter: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 .reveal--stagger {
@@ -1457,17 +1582,41 @@ main { position: relative; z-index: 3; }
 @keyframes staggerPop {
   0% {
     opacity: 0;
-    transform: translateX(-24px) scale(0.96);
-    filter: blur(4px);
+    transform: translateX(-28px) scale(0.88) rotate(-4deg);
+    filter: blur(6px);
+    clip-path: polygon(50% 20%, 80% 35%, 80% 65%, 50% 80%, 20% 65%, 20% 35%);
   }
-  70% {
+  65% {
     opacity: 1;
-    transform: translateX(6px) scale(1.01);
+    transform: translateX(8px) scale(1.04) rotate(1deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
   100% {
     opacity: 1;
     transform: none;
     filter: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+.skills__grid .reveal--geo.is-visible {
+  animation: skillHexPop 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--reveal-i, 0) * 0.07s);
+}
+@keyframes skillHexPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(-12deg);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) rotate(3deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 .timeline__item.reveal--stagger.is-visible {
@@ -1476,25 +1625,50 @@ main { position: relative; z-index: 3; }
 @keyframes timelineBlast {
   0% {
     opacity: 0;
-    transform: translateX(-40px) scale(0.92);
-    filter: blur(8px);
+    transform: translateX(-48px) scale(0.85) rotate(-3deg);
+    filter: blur(10px);
+    clip-path: polygon(0 0, 8% 0, 8% 100%, 0 100%);
   }
-  55% {
+  50% {
     opacity: 1;
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 0 40px rgba(0, 255, 232, 0.15);
+    transform: translateX(12px) scale(1.04) rotate(1deg);
+    box-shadow: 0 0 calc(24px + 30px * var(--scroll-charge, 0)) rgba(0, 255, 232, 0.2);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
   100% {
     opacity: 1;
     transform: none;
     filter: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+.deck .reveal--geo.is-visible {
+  animation: cardDiamondBlast 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--reveal-i, 0) * 0.1s);
+}
+@keyframes cardDiamondBlast {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(8deg);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) rotate(-2deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; filter: none; transition: none; animation: none !important; }
   .glitch::before, .glitch::after { display: none; }
   .audio-panel { display: none; }
-  .layer--burst, .scroll-flash, .ripples { display: none; }
+  .layer--burst, .layer--debris, .scroll-flash, .ripples { display: none; }
+  .band__hd-frame { display: none; }
   body.is-section-active { animation: none; }
 }
 
