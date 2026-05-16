@@ -2,15 +2,6 @@
   "use strict";
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var isMobile =
-    window.matchMedia("(max-width: 768px), (pointer: coarse)").matches ||
-    /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
-  var docHidden = document.hidden;
-  document.addEventListener("visibilitychange", function () {
-    docHidden = document.hidden;
-  });
-  if (isMobile) document.body.classList.add("is-mobile-fx");
-
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
@@ -302,10 +293,9 @@
       line.setAttribute("y2", String(cy + Math.sin(a) * r2));
       g.appendChild(line);
     }
-    if (!reduce && !isMobile) {
+    if (!reduce) {
       var rot = 0;
       function spin() {
-        if (docHidden) return;
         rot += 0.15;
         g.setAttribute("transform", "rotate(" + rot + " " + cx + " " + cy + ")");
         requestAnimationFrame(spin);
@@ -325,8 +315,6 @@
     ["locale.toronto", "Toronto, ON"],
     ["award.impact", "CIBC Impact Award"],
     ["interest.peak", "basketball · courtside"],
-    ["interest.markets", "stocks · investing · finance"],
-    ["hobby.crypto", "crypto · personal research"],
     ["signal.strong", "midya.ca · online"]
   ];
 
@@ -365,7 +353,7 @@
     var mouse = { x: -9999, y: -9999 };
 
     function count() {
-      if (isMobile || window.innerWidth < 640) return isMobile ? 22 : 40;
+      if (window.innerWidth < 640) return 40;
       if (window.innerWidth < 1024) return 75;
       return 120;
     }
@@ -385,7 +373,7 @@
     }
 
     function resize() {
-      DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2);
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W * DPR;
@@ -410,25 +398,13 @@
       );
     }
 
-    var linkDist = isMobile ? 95 : 130;
-    var meshRafId = 0;
+    var linkDist = 130;
     var hue = 0;
     var lastFps = performance.now();
     var frames = 0;
 
-    function scrollBoost() {
-      var c = parseFloat(
-        getComputedStyle(document.body).getPropertyValue("--scroll-charge") || "0"
-      );
-      return 1 + c * 2.2;
-    }
-
     function step() {
       if (reduce) return;
-      if (docHidden) {
-        meshRafId = 0;
-        return;
-      }
       frames++;
       var now = performance.now();
       if (now - lastFps >= 500 && hudFps) {
@@ -437,9 +413,8 @@
         lastFps = now;
       }
 
-      var boost = scrollBoost();
-      hue = (hue + 0.6 * boost) % 360;
-      ctx.fillStyle = "rgba(1, 2, 6, " + (0.14 + boost * 0.04) + ")";
+      hue = (hue + 0.5) % 360;
+      ctx.fillStyle = "rgba(1, 2, 6, 0.18)";
       ctx.fillRect(0, 0, W, H);
 
       var i;
@@ -449,12 +424,12 @@
         var dxm = mouse.x - p.x;
         var dym = mouse.y - p.y;
         var dm = Math.sqrt(dxm * dxm + dym * dym);
-        if (dm < 160 * boost && dm > 0) {
-          p.vx -= (dxm / dm) * 0.02 * boost;
-          p.vy -= (dym / dm) * 0.02 * boost;
+        if (dm < 160 && dm > 0) {
+          p.vx -= (dxm / dm) * 0.02;
+          p.vy -= (dym / dm) * 0.02;
         }
-        p.x += p.vx * boost;
-        p.y += p.vy * boost;
+        p.x += p.vx;
+        p.y += p.vy;
         p.vx *= 0.995;
         p.vy *= 0.995;
         if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -470,8 +445,8 @@
           var dx = p1.x - p2.x;
           var dy = p1.y - p2.y;
           var d = Math.sqrt(dx * dx + dy * dy);
-          if (d < linkDist * boost) {
-            var a = (1 - d / (linkDist * boost)) * 0.38 * boost;
+          if (d < linkDist) {
+            var a = (1 - d / linkDist) * 0.38;
             ctx.strokeStyle = "rgba(0,255,232," + a + ")";
             ctx.lineWidth = 0.55;
             ctx.beginPath();
@@ -490,29 +465,10 @@
         ctx.fill();
       }
 
-      if (boost > 2.2 && particles.length > 8) {
-        var hub = particles[(frames >> 2) % particles.length];
-        var spokeN = 6 + ((boost * 3) | 0);
-        var sr = 28 + boost * 22;
-        ctx.strokeStyle = "rgba(0,255,232," + Math.min(0.35, (boost - 2) * 0.12) + ")";
-        ctx.lineWidth = 0.6;
-        for (var si = 0; si < spokeN; si++) {
-          var sa = (si / spokeN) * Math.PI * 2 + hue * 0.02;
-          ctx.beginPath();
-          ctx.moveTo(hub.x, hub.y);
-          ctx.lineTo(hub.x + Math.cos(sa) * sr, hub.y + Math.sin(sa) * sr);
-          ctx.stroke();
-        }
-      }
-
-      meshRafId = requestAnimationFrame(step);
+      requestAnimationFrame(step);
     }
 
-    document.addEventListener("visibilitychange", function () {
-      if (!docHidden && !reduce && !meshRafId) meshRafId = requestAnimationFrame(step);
-    });
-
-    if (!reduce) meshRafId = requestAnimationFrame(step);
+    if (!reduce) requestAnimationFrame(step);
     else {
       ctx.fillStyle = "#010206";
       ctx.fillRect(0, 0, W, H);
@@ -523,7 +479,7 @@
   /* ========== CANVAS RAIN ========== */
   function initRain() {
     var canvas = document.getElementById("field2");
-    if (!canvas || !canvas.getContext || reduce || isMobile || window.innerWidth < 768) return;
+    if (!canvas || !canvas.getContext || reduce || window.innerWidth < 768) return;
     var ctx = canvas.getContext("2d");
     var W = 0;
     var H = 0;
@@ -573,7 +529,7 @@
   /* ========== FLARE CANVAS ========== */
   function initFlare() {
     var canvas = document.getElementById("field3");
-    if (!canvas || !canvas.getContext || reduce || isMobile) return;
+    if (!canvas || !canvas.getContext || reduce) return;
     var ctx = canvas.getContext("2d");
     var W = 0;
     var H = 0;
@@ -600,26 +556,18 @@
     resize();
     window.addEventListener("resize", resize);
 
-    function flareBoost() {
-      var c = parseFloat(
-        getComputedStyle(document.body).getPropertyValue("--scroll-charge") || "0"
-      );
-      return 1 + c * 2.5;
-    }
-
     function step() {
-      var boost = flareBoost();
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < orbs.length; i++) {
         var o = orbs[i];
-        o.x += o.vx * boost;
-        o.y += o.vy * boost;
+        o.x += o.vx;
+        o.y += o.vy;
         if (o.x < -o.r) o.x = W + o.r;
         if (o.x > W + o.r) o.x = -o.r;
         if (o.y < -o.r) o.y = H + o.r;
         if (o.y > H + o.r) o.y = -o.r;
-        var g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * boost);
-        g.addColorStop(0, "hsla(" + o.hue + ",100%,60%," + (0.07 * boost) + ")");
+        var g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+        g.addColorStop(0, "hsla(" + o.hue + ",100%,60%,0.07)");
         g.addColorStop(1, "transparent");
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -635,7 +583,7 @@
   function initShards() {
     var root = document.getElementById("fx-shards");
     if (!root || reduce) return;
-    var n = isMobile ? 5 : window.innerWidth < 640 ? 8 : 18;
+    var n = window.innerWidth < 640 ? 8 : 18;
     for (var i = 0; i < n; i++) {
       var li = document.createElement("li");
       li.style.left = Math.random() * 100 + "%";
@@ -654,7 +602,6 @@
       "Senior Consultant · Adaptavist",
       "Atlassian Certified · ACP-120",
       "Management Science · Waterloo",
-      "Stocks · Investing · Crypto",
       "Toronto · Canada"
     ];
     var i = 0;

@@ -76,12 +76,6 @@
   <canvas id="field" class="layer layer--mesh" aria-hidden="true"></canvas>
   <canvas id="field2" class="layer layer--rain" aria-hidden="true"></canvas>
   <canvas id="field3" class="layer layer--flare" aria-hidden="true"></canvas>
-  <canvas id="field-burst" class="layer layer--burst" aria-hidden="true"></canvas>
-  <canvas id="field-debris" class="layer layer--debris" aria-hidden="true"></canvas>
-
-  <div class="scroll-flash" id="scroll-flash" aria-hidden="true"></div>
-  <div class="ripples" id="ripples" aria-hidden="true"></div>
-
   <div class="fx" aria-hidden="true">
     <div class="fx__mesh"></div>
     <div class="fx__horizon"></div>
@@ -100,21 +94,7 @@
 
   <aside class="hud" aria-hidden="true">
     <div class="hud__col"><span id="hud-hash">0x000000</span><span id="hud-fps">FPS --</span></div>
-    <div class="hud__col hud__col--right"><span id="hud-tick">T+0.000</span><span id="hud-scroll">DEPTH 0%</span><span id="hud-mouse">0,0</span></div>
-  </aside>
-
-  <aside class="audio-panel" id="audio-panel" aria-label="Audio controls">
-    <button type="button" class="audio-panel__toggle" id="audio-toggle" aria-pressed="false" aria-label="Activate soundtrack" data-magnetic>
-      <span class="audio-panel__icon" aria-hidden="true">◉</span>
-      <span class="audio-panel__label">ACTIVATE SOUNDTRACK</span>
-    </button>
-    <div class="audio-panel__controls" id="audio-controls" hidden>
-      <label class="audio-panel__vol">
-        <span>VOL</span>
-        <input type="range" id="audio-volume" min="0" max="100" value="35" />
-      </label>
-      <button type="button" class="audio-panel__mini" id="audio-sfx-toggle" aria-pressed="true">SFX ON</button>
-    </div>
+    <div class="hud__col hud__col--right"><span id="hud-tick">T+0.000</span><span id="hud-mouse">0,0</span></div>
   </aside>
 
   <header class="head">
@@ -208,9 +188,8 @@
       </div>
     </div>
 
-    <section id="about" class="band band--fx" data-section>
-      <header class="band__hd reveal reveal--blast reveal--geo-hd" data-reveal>
-        <span class="band__hd-frame" aria-hidden="true"></span>
+    <section id="about" class="band">
+      <header class="band__hd reveal" data-reveal>
         <span class="band__sig">SECTOR // ABOUT</span>
         <h2 class="band__ttl">Profile summary</h2>
       </header>
@@ -229,13 +208,12 @@
       </div>
     </section>
 
-    <section id="experience" class="band band--dim band--fx" data-section>
-      <header class="band__hd reveal reveal--blast reveal--geo-hd" data-reveal>
-        <span class="band__hd-frame" aria-hidden="true"></span>
+    <section id="experience" class="band band--dim">
+      <header class="band__hd reveal" data-reveal>
         <span class="band__sig">SECTOR // EXPERIENCE</span>
         <h2 class="band__ttl">Career timeline</h2>
       </header>
-      <ol class="timeline" data-stagger>
+      <ol class="timeline reveal" data-reveal>
         <li class="timeline__item" data-tilt>
           <span class="timeline__node" aria-hidden="true"></span>
           <article class="timeline__card">
@@ -283,13 +261,12 @@
       </ol>
     </section>
 
-    <section id="education" class="band band--fx" data-section>
-      <header class="band__hd reveal reveal--blast reveal--geo-hd" data-reveal>
-        <span class="band__hd-frame" aria-hidden="true"></span>
+    <section id="education" class="band">
+      <header class="band__hd reveal" data-reveal>
         <span class="band__sig">SECTOR // EDUCATION</span>
         <h2 class="band__ttl">Education</h2>
       </header>
-      <ul class="deck" data-stagger>
+      <ul class="deck">
         <li class="card card--edu card--waterloo reveal" data-reveal data-tilt data-glow>
           <div class="card__scan" aria-hidden="true"></div>
           <div class="card__brand">
@@ -317,14 +294,13 @@
       </ul>
     </section>
 
-    <section id="skills" class="band band--forge band--fx" data-section>
-      <header class="band__hd reveal reveal--blast reveal--geo-hd" data-reveal>
-        <span class="band__hd-frame" aria-hidden="true"></span>
+    <section id="skills" class="band band--forge">
+      <header class="band__hd reveal" data-reveal>
         <span class="band__sig">SECTOR // SKILLS</span>
         <h2 class="band__ttl">Core competencies</h2>
       </header>
       <div class="skills reveal" data-reveal>
-        <ul class="skills__grid" id="skills-grid" data-stagger>
+        <ul class="skills__grid" id="skills-grid">
           <li>Leadership</li>
           <li>Communication</li>
           <li>Business analysis</li>
@@ -364,9 +340,8 @@
       </div>
     </section>
 
-    <section id="telemetry" class="band band--dim band--fx" data-section>
-      <header class="band__hd reveal reveal--blast reveal--geo-hd" data-reveal>
-        <span class="band__hd-frame" aria-hidden="true"></span>
+    <section id="telemetry" class="band band--dim">
+      <header class="band__hd reveal" data-reveal>
         <span class="band__sig">SECTOR // TELEMETRY</span>
         <h2 class="band__ttl">Live stream</h2>
       </header>
@@ -398,6 +373,5 @@
   </main>
 
   <script src="script.js" defer></script>
-  <script src="fx-extra.js" defer></script>
 </body>
 </html>
