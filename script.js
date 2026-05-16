@@ -566,18 +566,26 @@
     resize();
     window.addEventListener("resize", resize);
 
+    function flareBoost() {
+      var c = parseFloat(
+        getComputedStyle(document.body).getPropertyValue("--scroll-charge") || "0"
+      );
+      return 1 + c * 2.5;
+    }
+
     function step() {
+      var boost = flareBoost();
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < orbs.length; i++) {
         var o = orbs[i];
-        o.x += o.vx;
-        o.y += o.vy;
+        o.x += o.vx * boost;
+        o.y += o.vy * boost;
         if (o.x < -o.r) o.x = W + o.r;
         if (o.x > W + o.r) o.x = -o.r;
         if (o.y < -o.r) o.y = H + o.r;
         if (o.y > H + o.r) o.y = -o.r;
-        var g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-        g.addColorStop(0, "hsla(" + o.hue + ",100%,60%,0.07)");
+        var g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * boost);
+        g.addColorStop(0, "hsla(" + o.hue + ",100%,60%," + (0.07 * boost) + ")");
         g.addColorStop(1, "transparent");
         ctx.fillStyle = g;
         ctx.beginPath();

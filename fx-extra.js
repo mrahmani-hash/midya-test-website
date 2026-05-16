@@ -66,7 +66,7 @@
           sec.classList.add("is-inview");
           spawnBurstAt(sec.querySelector(".band__hd") || sec);
           triggerFlash(0.55);
-          playBlip(880, 0.04);
+          if (audioOn) playBlip(880, 0.04);
         },
         { threshold: 0.22 }
       );
@@ -201,7 +201,7 @@
         setTimeout(function () {
           ripple.remove();
         }, 900);
-        playBlip(520 + Math.random() * 200, 0.03);
+        if (audioOn) playBlip(520 + Math.random() * 200, 0.03);
       },
       { passive: true }
     );
@@ -217,7 +217,7 @@
   var arpTimer = null;
 
   function playBlip(freq, gain) {
-    if (!audioCtx || !sfxGain || !sfxOn) return;
+    if (!audioCtx || !sfxGain || !sfxOn || !audioOn) return;
     var t = audioCtx.currentTime;
     var o = audioCtx.createOscillator();
     var g = audioCtx.createGain();
