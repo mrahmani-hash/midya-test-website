@@ -76,6 +76,10 @@
   <canvas id="field" class="layer layer--mesh" aria-hidden="true"></canvas>
   <canvas id="field2" class="layer layer--rain" aria-hidden="true"></canvas>
   <canvas id="field3" class="layer layer--flare" aria-hidden="true"></canvas>
+  <canvas id="field-burst" class="layer layer--burst" aria-hidden="true"></canvas>
+
+  <div class="scroll-flash" id="scroll-flash" aria-hidden="true"></div>
+  <div class="ripples" id="ripples" aria-hidden="true"></div>
 
   <div class="fx" aria-hidden="true">
     <div class="fx__mesh"></div>
@@ -95,7 +99,21 @@
 
   <aside class="hud" aria-hidden="true">
     <div class="hud__col"><span id="hud-hash">0x000000</span><span id="hud-fps">FPS --</span></div>
-    <div class="hud__col hud__col--right"><span id="hud-tick">T+0.000</span><span id="hud-mouse">0,0</span></div>
+    <div class="hud__col hud__col--right"><span id="hud-tick">T+0.000</span><span id="hud-scroll">DEPTH 0%</span><span id="hud-mouse">0,0</span></div>
+  </aside>
+
+  <aside class="audio-panel" id="audio-panel" aria-label="Audio controls">
+    <button type="button" class="audio-panel__toggle" id="audio-toggle" aria-pressed="false" data-magnetic>
+      <span class="audio-panel__icon" aria-hidden="true">◉</span>
+      <span class="audio-panel__label">ACTIVATE AUDIO</span>
+    </button>
+    <div class="audio-panel__controls" id="audio-controls" hidden>
+      <label class="audio-panel__vol">
+        <span>VOL</span>
+        <input type="range" id="audio-volume" min="0" max="100" value="35" />
+      </label>
+      <button type="button" class="audio-panel__mini" id="audio-sfx-toggle" aria-pressed="true">SFX ON</button>
+    </div>
   </aside>
 
   <header class="head">
@@ -180,8 +198,8 @@
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker__lane ticker__lane--a">
-        <span>technology · AI · innovation · product · data · strategy · leadership · collaboration ·</span>
-        <span>technology · AI · innovation · product · data · strategy · leadership · collaboration ·</span>
+        <span>technology · AI · innovation · product · data · strategy · leadership · collaboration · stocks · investing · finance · crypto ·</span>
+        <span>technology · AI · innovation · product · data · strategy · leadership · collaboration · stocks · investing · finance · crypto ·</span>
       </div>
       <div class="ticker__lane ticker__lane--b">
         <span>Adaptavist · CIBC · Gold Line · Waterloo · York · Atlassian · Toronto ·</span>
@@ -189,8 +207,8 @@
       </div>
     </div>
 
-    <section id="about" class="band">
-      <header class="band__hd reveal" data-reveal>
+    <section id="about" class="band band--fx" data-section>
+      <header class="band__hd reveal reveal--blast" data-reveal>
         <span class="band__sig">SECTOR // ABOUT</span>
         <h2 class="band__ttl">Profile summary</h2>
       </header>
@@ -203,18 +221,18 @@
           I specialize in <strong>leadership</strong>, <strong>communication</strong>, and <strong>business analysis</strong> — helping teams deliver at scale. Previously at <strong>CIBC</strong> for nearly five years in progressively senior roles (Technical Systems Analyst through Senior Consultant), with recognition including the <strong>CIBC Impact Award</strong> and <strong>Q4 Achievers Award</strong>. Certified as an <strong>Atlassian Cloud Administrator (ACP-120)</strong>.
         </p>
         <p>
-          Fluent in <strong>English</strong> and <strong>Persian</strong>. Interests include <strong>basketball</strong>, <strong>motorcycles</strong>, and <strong>AI &amp; emerging technology</strong>. Full timeline on
+          Fluent in <strong>English</strong> and <strong>Persian</strong>. Interests include <strong>basketball</strong>, <strong>motorcycles</strong>, <strong>stocks &amp; investing</strong> (including <strong>crypto</strong> and <strong>finance</strong> as personal hobbies), and <strong>AI &amp; emerging technology</strong>. Full timeline on
           <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
         </p>
       </div>
     </section>
 
-    <section id="experience" class="band band--dim">
-      <header class="band__hd reveal" data-reveal>
+    <section id="experience" class="band band--dim band--fx" data-section>
+      <header class="band__hd reveal reveal--blast" data-reveal>
         <span class="band__sig">SECTOR // EXPERIENCE</span>
         <h2 class="band__ttl">Career timeline</h2>
       </header>
-      <ol class="timeline reveal" data-reveal>
+      <ol class="timeline reveal" data-reveal data-stagger>
         <li class="timeline__item" data-tilt>
           <span class="timeline__node" aria-hidden="true"></span>
           <article class="timeline__card">
@@ -262,12 +280,12 @@
       </ol>
     </section>
 
-    <section id="education" class="band">
-      <header class="band__hd reveal" data-reveal>
+    <section id="education" class="band band--fx" data-section>
+      <header class="band__hd reveal reveal--blast" data-reveal>
         <span class="band__sig">SECTOR // EDUCATION</span>
         <h2 class="band__ttl">Education</h2>
       </header>
-      <ul class="deck">
+      <ul class="deck" data-stagger>
         <li class="card card--edu card--waterloo reveal" data-reveal data-tilt data-glow>
           <div class="card__scan" aria-hidden="true"></div>
           <div class="card__brand">
@@ -293,13 +311,13 @@
       </ul>
     </section>
 
-    <section id="skills" class="band band--forge">
-      <header class="band__hd reveal" data-reveal>
+    <section id="skills" class="band band--forge band--fx" data-section>
+      <header class="band__hd reveal reveal--blast" data-reveal>
         <span class="band__sig">SECTOR // SKILLS</span>
         <h2 class="band__ttl">Core competencies</h2>
       </header>
       <div class="skills reveal" data-reveal>
-        <ul class="skills__grid" id="skills-grid">
+        <ul class="skills__grid" id="skills-grid" data-stagger>
           <li>Leadership</li>
           <li>Communication</li>
           <li>Business analysis</li>
@@ -329,14 +347,18 @@
         <div class="interests__row">
           <span class="chip-pill" data-float>Basketball</span>
           <span class="chip-pill" data-float>Motorcycles</span>
+          <span class="chip-pill" data-float>Stocks &amp; markets</span>
+          <span class="chip-pill" data-float>Investing</span>
+          <span class="chip-pill" data-float>Finance</span>
+          <span class="chip-pill" data-float>Crypto</span>
           <span class="chip-pill" data-float>AI trends</span>
           <span class="chip-pill" data-float>Emerging tech</span>
         </div>
       </div>
     </section>
 
-    <section id="telemetry" class="band band--dim">
-      <header class="band__hd reveal" data-reveal>
+    <section id="telemetry" class="band band--dim band--fx" data-section>
+      <header class="band__hd reveal reveal--blast" data-reveal>
         <span class="band__sig">SECTOR // TELEMETRY</span>
         <h2 class="band__ttl">Live stream</h2>
       </header>
@@ -368,5 +390,6 @@
   </main>
 
   <script src="script.js" defer></script>
+  <script src="fx-extra.js" defer></script>
 </body>
 </html>

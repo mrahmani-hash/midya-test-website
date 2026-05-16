@@ -4,6 +4,8 @@ alerts:
 domains:
   - domain: midya.ca
     type: PRIMARY
+  - domain: www.midya.ca
+    type: ALIAS
 features:
   - buildpack-stack=ubuntu-22
 ingress:

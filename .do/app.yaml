@@ -1,5 +1,10 @@
 name: midya-website-app
 region: tor
+domains:
+  - domain: midya.ca
+    type: PRIMARY
+  - domain: www.midya.ca
+    type: ALIAS
 static_sites:
   - name: midya-test-website
     github:

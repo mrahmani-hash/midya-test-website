@@ -315,6 +315,8 @@
     ["locale.toronto", "Toronto, ON"],
     ["award.impact", "CIBC Impact Award"],
     ["interest.peak", "basketball · courtside"],
+    ["interest.markets", "stocks · investing · finance"],
+    ["hobby.crypto", "crypto · personal research"],
     ["signal.strong", "midya.ca · online"]
   ];
 
@@ -403,6 +405,13 @@
     var lastFps = performance.now();
     var frames = 0;
 
+    function scrollBoost() {
+      var c = parseFloat(
+        getComputedStyle(document.body).getPropertyValue("--scroll-charge") || "0"
+      );
+      return 1 + c * 2.2;
+    }
+
     function step() {
       if (reduce) return;
       frames++;
@@ -413,8 +422,9 @@
         lastFps = now;
       }
 
-      hue = (hue + 0.5) % 360;
-      ctx.fillStyle = "rgba(1, 2, 6, 0.18)";
+      var boost = scrollBoost();
+      hue = (hue + 0.6 * boost) % 360;
+      ctx.fillStyle = "rgba(1, 2, 6, " + (0.14 + boost * 0.04) + ")";
       ctx.fillRect(0, 0, W, H);
 
       var i;
@@ -424,12 +434,12 @@
         var dxm = mouse.x - p.x;
         var dym = mouse.y - p.y;
         var dm = Math.sqrt(dxm * dxm + dym * dym);
-        if (dm < 160 && dm > 0) {
-          p.vx -= (dxm / dm) * 0.02;
-          p.vy -= (dym / dm) * 0.02;
+        if (dm < 160 * boost && dm > 0) {
+          p.vx -= (dxm / dm) * 0.02 * boost;
+          p.vy -= (dym / dm) * 0.02 * boost;
         }
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx * boost;
+        p.y += p.vy * boost;
         p.vx *= 0.995;
         p.vy *= 0.995;
         if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -445,8 +455,8 @@
           var dx = p1.x - p2.x;
           var dy = p1.y - p2.y;
           var d = Math.sqrt(dx * dx + dy * dy);
-          if (d < linkDist) {
-            var a = (1 - d / linkDist) * 0.38;
+          if (d < linkDist * boost) {
+            var a = (1 - d / (linkDist * boost)) * 0.38 * boost;
             ctx.strokeStyle = "rgba(0,255,232," + a + ")";
             ctx.lineWidth = 0.55;
             ctx.beginPath();
@@ -602,6 +612,7 @@
       "Senior Consultant · Adaptavist",
       "Atlassian Certified · ACP-120",
       "Management Science · Waterloo",
+      "Stocks · Investing · Crypto",
       "Toronto · Canada"
     ];
     var i = 0;
