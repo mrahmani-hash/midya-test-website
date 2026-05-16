@@ -11,5 +11,9 @@ do
     cp "$f" _site/
   fi
 done
+# Social preview image must match og:image URL (query string is cache-bust only)
+if [ -f og-image.jpg ]; then
+  cp og-image.jpg _site/og-image.jpg
+fi
 echo "Built _site:"
 ls -la _site
