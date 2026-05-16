@@ -1,18 +1,13 @@
-# Set github.repo to your GitHub repo in owner/name form, then:
-#   doctl apps create --spec .do/app.yaml
-# Or attach the repo in the DigitalOcean UI (App Platform → Create → GitHub).
-name: midya-ca
+name: midya-website-app
 region: tor
 static_sites:
-  - name: web
+  - name: midya-test-website
     github:
-      repo: OWNER_NAME/REPO_NAME
+      repo: mrahmani-hash/midya-test-website
       branch: main
       deploy_on_push: true
     source_dir: /
-    build_command: 'mkdir -p _site && cp index.html styles.css script.js favicon.svg favicon-16x16.png favicon-32x32.png apple-touch-icon.png og-image.png site.webmanifest robots.txt sitemap.xml _site/'
+    build_command: chmod +x build.sh && ./build.sh
     output_dir: _site
     index_document: index.html
     catchall_document: index.html
-    routes:
-      - path: /

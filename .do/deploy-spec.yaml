@@ -1,0 +1,31 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+domains:
+  - domain: midya.ca
+    type: PRIMARY
+features:
+  - buildpack-stack=ubuntu-22
+ingress:
+  rules:
+    - component:
+        name: midya-test-website
+      match:
+        authority:
+          exact: ""
+        path:
+          prefix: /
+name: midya-website-app
+region: tor
+static_sites:
+  - name: midya-test-website
+    environment_slug: html
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: mrahmani-hash/midya-test-website
+    source_dir: /
+    build_command: chmod +x build.sh && ./build.sh
+    output_dir: _site
+    index_document: index.html
+    catchall_document: index.html
