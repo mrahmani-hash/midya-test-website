@@ -4,6 +4,21 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) return;
 
+  var isMobile =
+    window.matchMedia("(max-width: 768px), (pointer: coarse)").matches ||
+    /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  var docHidden = document.hidden;
+  var burstRafId = 0;
+  var debrisRafId = 0;
+
+  document.addEventListener("visibilitychange", function () {
+    docHidden = document.hidden;
+    if (!docHidden) {
+      if (burstCtx && !burstRafId) burstRafId = requestAnimationFrame(stepBursts);
+      if (debrisCtx && !debrisRafId) debrisRafId = requestAnimationFrame(stepDebris);
+    }
+  });
+
   var scrollCharge = 0;
   var lastScrollY = window.scrollY;
   var lastScrollT = performance.now();
@@ -35,6 +50,9 @@
   }
 
   function burstCount(intensity) {
+    if (isMobile) {
+      return Math.min(28, Math.floor((8 + Math.random() * 10) * intensity));
+    }
     var base = 36 + (Math.random() * 28) | 0;
     return Math.min(140, Math.floor(base * (1 + scrollCharge * 2.2) * intensity));
   }
@@ -87,10 +105,14 @@
           sec.classList.add("is-inview");
           var hd = sec.querySelector(".band__hd");
           if (hd) hd.classList.add("is-frame-live");
-          spawnBurstAt(hd || sec, 1.65);
-          spawnSpokeOverlay(sec);
-          spawnGridOverlay(sec);
-          triggerFlash(0.62);
+          if (!isMobile) {
+            spawnBurstAt(hd || sec, 1.65);
+            spawnSpokeOverlay(sec);
+            spawnGridOverlay(sec);
+            triggerFlash(0.62);
+          } else {
+            triggerFlash(0.25);
+          }
           if (audioOn) playBlip(880, 0.04);
         },
         { threshold: 0.22 }
@@ -146,9 +168,9 @@
       });
 
       if (vel > 1.8 && now > scrollBurstCooldown) {
-        var chance = 0.35 + scrollCharge * 0.45;
+        var chance = isMobile ? 0.08 + scrollCharge * 0.12 : 0.35 + scrollCharge * 0.45;
         if (Math.random() < chance) {
-          scrollBurstCooldown = now + 90;
+          scrollBurstCooldown = now + (isMobile ? 280 : 90);
           spawnScrollBurst(
             window.innerWidth * (0.25 + Math.random() * 0.5),
             window.innerHeight * (0.2 + Math.random() * 0.55)
@@ -156,12 +178,12 @@
         }
       }
 
-      if (vel > 2.8) {
+      if (!isMobile && vel > 2.8) {
         triggerFlash(0.12 + scrollCharge * 0.22);
         if (Math.random() > 0.55) spawnVelocityGrid();
       }
 
-      if (vel > 4.2 && Math.random() > 0.65) {
+      if (!isMobile && vel > 4.2 && Math.random() > 0.65) {
         spawnDebrisShard(
           window.innerWidth * Math.random(),
           window.innerHeight * 0.35 + Math.random() * window.innerHeight * 0.35
@@ -176,7 +198,7 @@
   /* ========== BURST CANVAS ========== */
   function resizeBurst() {
     if (!burstCanvas || !burstCtx) return;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2);
     burstCanvas.width = window.innerWidth * dpr;
     burstCanvas.height = window.innerHeight * dpr;
     burstCanvas.style.width = window.innerWidth + "px";
@@ -223,10 +245,13 @@
     for (i = 0; i < n; i++) {
       bursts.push(makeParticle(cx, cy, intensity, i % 3 === 0));
     }
-    spawnSpokeOverlayAt(cx, cy, 0.7 + intensity * 0.35);
-    spawnGridOverlayAt(cx, cy, 0.55 + intensity * 0.3);
-    for (i = 0; i < 4; i++) {
-      spawnDebrisShard(cx, cy);
+    if (isMobile && bursts.length > 60) bursts.splice(0, bursts.length - 60);
+    if (!isMobile) {
+      spawnSpokeOverlayAt(cx, cy, 0.7 + intensity * 0.35);
+      spawnGridOverlayAt(cx, cy, 0.55 + intensity * 0.3);
+      for (i = 0; i < 4; i++) {
+        spawnDebrisShard(cx, cy);
+      }
     }
   }
 
@@ -412,6 +437,10 @@
 
   function stepBursts() {
     if (!burstCtx) return;
+    if (docHidden) {
+      burstRafId = 0;
+      return;
+    }
     burstCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     drawOverlays(burstCtx);
 
@@ -432,11 +461,15 @@
       drawShape(burstCtx, p);
       burstCtx.restore();
     }
-    requestAnimationFrame(stepBursts);
+    burstRafId = requestAnimationFrame(stepBursts);
   }
 
   function stepDebris() {
     if (!debrisCtx) return;
+    if (docHidden) {
+      debrisRafId = 0;
+      return;
+    }
     debrisCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     var i;
     for (i = debris.length - 1; i >= 0; i--) {
@@ -462,21 +495,21 @@
       });
       debrisCtx.restore();
     }
-    requestAnimationFrame(stepDebris);
+    debrisRafId = requestAnimationFrame(stepDebris);
   }
 
   function initBurstCanvas() {
     if (!burstCanvas) return;
     resizeBurst();
     window.addEventListener("resize", resizeBurst);
-    requestAnimationFrame(stepBursts);
+    burstRafId = requestAnimationFrame(stepBursts);
   }
 
   function initDebrisCanvas() {
-    if (!debrisCanvas) return;
+    if (isMobile || !debrisCanvas) return;
     resizeDebris();
     window.addEventListener("resize", resizeDebris);
-    requestAnimationFrame(stepDebris);
+    debrisRafId = requestAnimationFrame(stepDebris);
   }
 
   function triggerFlash(intensity) {
@@ -699,7 +732,7 @@
     }
 
     if (musicSchedulerId) clearTimeout(musicSchedulerId);
-    musicSchedulerId = setTimeout(scheduleMusicStep, 28);
+    musicSchedulerId = setTimeout(scheduleMusicStep, isMobile ? 48 : 28);
   }
 
   function startAmbient() {
@@ -784,7 +817,13 @@
 
     toggle.addEventListener("click", function () {
       if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          audioCtx = new Ctx();
+        } catch (err) {
+          return;
+        }
         masterGain = audioCtx.createGain();
         sfxGain = audioCtx.createGain();
         masterGain.connect(audioCtx.destination);
@@ -798,9 +837,11 @@
 
       audioOn = !audioOn;
       toggle.setAttribute("aria-pressed", audioOn ? "true" : "false");
-      toggle.querySelector(".audio-panel__label").textContent = audioOn
-        ? "GRID LIVE"
-        : "ACTIVATE SOUNDTRACK";
+      toggle.setAttribute(
+        "aria-label",
+        audioOn ? "Soundtrack on — tap to mute" : "Activate soundtrack"
+      );
+      toggle.querySelector(".audio-panel__label").textContent = audioOn ? "LIVE" : "ACTIVATE SOUNDTRACK";
       toggle.classList.toggle("is-live", audioOn);
       if (controls) controls.hidden = !audioOn;
 
@@ -827,16 +868,18 @@
       });
     }
 
-    document.querySelectorAll("a, button").forEach(function (el) {
-      el.addEventListener(
-        "mouseenter",
-        function () {
-          if (!audioOn) return;
-          playBlip(440 + Math.random() * 280, 0.012, "square");
-        },
-        { passive: true }
-      );
-    });
+    if (window.matchMedia("(pointer: fine)").matches && !isMobile) {
+      document.querySelectorAll("a, button").forEach(function (el) {
+        el.addEventListener(
+          "mouseenter",
+          function () {
+            if (!audioOn) return;
+            playBlip(440 + Math.random() * 280, 0.012, "square");
+          },
+          { passive: true }
+        );
+      });
+    }
   }
 
   /* ========== KONAMI ========== */
@@ -853,7 +896,7 @@
           for (var i = 0; i < 8; i++) {
             spawnBurstAt(document.body, 1.2);
           }
-          playBlip(1200, 0.1);
+          if (audioOn) playBlip(1200, 0.1);
           setTimeout(function () {
             body.classList.remove("is-overdrive");
           }, 4000);

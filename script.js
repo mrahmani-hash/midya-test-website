@@ -2,6 +2,15 @@
   "use strict";
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isMobile =
+    window.matchMedia("(max-width: 768px), (pointer: coarse)").matches ||
+    /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  var docHidden = document.hidden;
+  document.addEventListener("visibilitychange", function () {
+    docHidden = document.hidden;
+  });
+  if (isMobile) document.body.classList.add("is-mobile-fx");
+
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
@@ -293,9 +302,10 @@
       line.setAttribute("y2", String(cy + Math.sin(a) * r2));
       g.appendChild(line);
     }
-    if (!reduce) {
+    if (!reduce && !isMobile) {
       var rot = 0;
       function spin() {
+        if (docHidden) return;
         rot += 0.15;
         g.setAttribute("transform", "rotate(" + rot + " " + cx + " " + cy + ")");
         requestAnimationFrame(spin);
@@ -355,7 +365,7 @@
     var mouse = { x: -9999, y: -9999 };
 
     function count() {
-      if (window.innerWidth < 640) return 40;
+      if (isMobile || window.innerWidth < 640) return isMobile ? 22 : 40;
       if (window.innerWidth < 1024) return 75;
       return 120;
     }
@@ -375,7 +385,7 @@
     }
 
     function resize() {
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2);
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W * DPR;
@@ -400,7 +410,8 @@
       );
     }
 
-    var linkDist = 130;
+    var linkDist = isMobile ? 95 : 130;
+    var meshRafId = 0;
     var hue = 0;
     var lastFps = performance.now();
     var frames = 0;
@@ -414,6 +425,10 @@
 
     function step() {
       if (reduce) return;
+      if (docHidden) {
+        meshRafId = 0;
+        return;
+      }
       frames++;
       var now = performance.now();
       if (now - lastFps >= 500 && hudFps) {
@@ -490,10 +505,14 @@
         }
       }
 
-      requestAnimationFrame(step);
+      meshRafId = requestAnimationFrame(step);
     }
 
-    if (!reduce) requestAnimationFrame(step);
+    document.addEventListener("visibilitychange", function () {
+      if (!docHidden && !reduce && !meshRafId) meshRafId = requestAnimationFrame(step);
+    });
+
+    if (!reduce) meshRafId = requestAnimationFrame(step);
     else {
       ctx.fillStyle = "#010206";
       ctx.fillRect(0, 0, W, H);
@@ -504,7 +523,7 @@
   /* ========== CANVAS RAIN ========== */
   function initRain() {
     var canvas = document.getElementById("field2");
-    if (!canvas || !canvas.getContext || reduce || window.innerWidth < 768) return;
+    if (!canvas || !canvas.getContext || reduce || isMobile || window.innerWidth < 768) return;
     var ctx = canvas.getContext("2d");
     var W = 0;
     var H = 0;
@@ -554,7 +573,7 @@
   /* ========== FLARE CANVAS ========== */
   function initFlare() {
     var canvas = document.getElementById("field3");
-    if (!canvas || !canvas.getContext || reduce) return;
+    if (!canvas || !canvas.getContext || reduce || isMobile) return;
     var ctx = canvas.getContext("2d");
     var W = 0;
     var H = 0;
@@ -616,7 +635,7 @@
   function initShards() {
     var root = document.getElementById("fx-shards");
     if (!root || reduce) return;
-    var n = window.innerWidth < 640 ? 8 : 18;
+    var n = isMobile ? 5 : window.innerWidth < 640 ? 8 : 18;
     for (var i = 0; i < n; i++) {
       var li = document.createElement("li");
       li.style.left = Math.random() * 100 + "%";
