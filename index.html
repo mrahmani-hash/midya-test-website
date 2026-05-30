@@ -23,8 +23,8 @@
   <meta name="robots" content="index, follow" />
   <meta name="thumbnail" content="https://midya.ca/og-image.jpg?v=6" />
   <link rel="canonical" href="https://midya.ca/" />
-  <meta name="theme-color" content="#04060d" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#ECEAE0" />
+  <meta name="color-scheme" content="light" />
   <meta name="apple-mobile-web-app-title" content="Midya Rahmani" />
   <link rel="image_src" href="https://midya.ca/og-image.jpg?v=6" />
   <link rel="apple-touch-icon-precomposed" href="https://midya.ca/apple-touch-icon.png" />
@@ -39,7 +39,7 @@
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script type="application/ld+json">
   {
@@ -63,77 +63,27 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Boot / preloader -->
-  <div class="boot" id="boot" aria-hidden="true">
-    <div class="boot__frame">
-      <div class="boot__brand">MIDYA<span>.CA</span></div>
-      <div class="boot__bar"><span class="boot__fill" id="boot-fill"></span></div>
-      <div class="boot__meta">
-        <span class="boot__log" id="boot-log">INITIALIZING…</span>
-        <span class="boot__pct" id="boot-pct">0%</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Background field -->
-  <div class="bg" aria-hidden="true">
-    <canvas id="net" class="bg__canvas bg__canvas--net"></canvas>
-    <canvas id="rain" class="bg__canvas bg__canvas--rain"></canvas>
-    <div class="bg__aurora"></div>
-    <div class="bg__grid"></div>
-    <div class="bg__beam"></div>
-    <div class="bg__scan"></div>
-    <div class="bg__grain"></div>
-    <div class="bg__vignette"></div>
-  </div>
-
-  <!-- Custom cursor -->
-  <div class="cursor" id="cursor" aria-hidden="true">
-    <span class="cursor__ring"></span>
-    <span class="cursor__dot"></span>
-  </div>
-
-  <!-- Scroll progress -->
   <div class="prog" id="prog" aria-hidden="true"></div>
-
-  <!-- HUD telemetry -->
-  <aside class="hud" aria-hidden="true">
-    <div class="hud__row">
-      <span class="hud__k">SIG</span><span id="hud-hash">0x000000</span>
-    </div>
-    <div class="hud__row hud__row--end">
-      <span id="hud-fps">FPS ··</span><span class="hud__k">RENDER</span>
-    </div>
-    <div class="hud__row">
-      <span class="hud__k">UPTIME</span><span id="hud-tick">T+0.000</span>
-    </div>
-    <div class="hud__row hud__row--end">
-      <span id="hud-mouse">0,0</span><span class="hud__k">VEC</span>
-    </div>
-  </aside>
+  <div class="paper" aria-hidden="true"></div>
 
   <!-- Header -->
   <header class="head" id="head">
     <div class="head__inner">
-      <a class="mark" href="#top" data-magnetic aria-label="MIDYA.CA home">
-        <span class="mark__hex" aria-hidden="true"></span>
-        <span class="mark__txt">MIDYA<span>.CA</span></span>
-      </a>
+      <a class="mark" href="#top" aria-label="MIDYA.CA home">MIDYA<span>.CA</span></a>
       <nav class="nav" aria-label="Primary">
         <button type="button" class="nav__btn" aria-expanded="false" aria-controls="nav-list" aria-label="Toggle menu">
-          <span class="nav__bars"></span>
+          <span class="nav__bars"></span> MENU
         </button>
         <ul class="nav__list" id="nav-list">
-          <li><a href="#about" data-magnetic><i>01</i> About</a></li>
-          <li><a href="#experience" data-magnetic><i>02</i> Experience</a></li>
-          <li><a href="#education" data-magnetic><i>03</i> Education</a></li>
-          <li><a href="#interests" data-magnetic><i>04</i> Interests</a></li>
-          <li><a href="#contact" data-magnetic><i>05</i> Contact</a></li>
+          <li><a href="#about"><i>01</i> About</a></li>
+          <li><a href="#experience"><i>02</i> Work</a></li>
+          <li><a href="#education"><i>03</i> Education</a></li>
+          <li><a href="#interests"><i>04</i> Interests</a></li>
+          <li><a href="#contact"><i>05</i> Contact</a></li>
         </ul>
       </nav>
-      <a class="head__cta" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer" data-magnetic aria-label="LinkedIn profile">
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-        <span>LinkedIn</span>
+      <a class="head__cta" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">
+        LinkedIn ↗
       </a>
     </div>
   </header>
@@ -142,236 +92,185 @@
     <span id="top"></span>
 
     <!-- HERO -->
-    <section class="hero" aria-labelledby="hero-name">
-      <div class="hero__inner">
+    <section class="hero">
+      <div class="hero__head">
+        <p class="kicker" data-reveal><span class="kicker__sq" aria-hidden="true"></span> PERSONAL SIGNAL — MIDYA.CA</p>
+        <p class="kicker kicker--r" data-reveal>TORONTO · CANADA / EST. 2012</p>
+      </div>
+      <h1 class="hero__name" id="hero-name">
+        <span class="line" data-reveal>MIDYA</span>
+        <span class="line line--out" data-reveal>RAHMANI</span>
+      </h1>
+      <div class="hero__grid">
+        <div class="hero__media" data-reveal>
+          <div class="shot">
+            <img src="midya-photo.png" alt="Midya Rahmani" width="520" height="520" loading="eager" fetchpriority="high" />
+          </div>
+          <div class="badge" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs><path id="badge-arc" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
+              <text><textPath href="#badge-arc" startOffset="0">OPEN TO CONNECT · TORONTO · CANADA · </textPath></text>
+            </svg>
+            <span class="badge__mark">↗</span>
+          </div>
+        </div>
         <div class="hero__copy">
-          <p class="tagline" data-reveal>
-            <span class="tagline__dot" aria-hidden="true"></span>
-            PERSONAL SIGNAL · MIDYA.CA
-          </p>
-          <h1 id="hero-name" class="hero__name" data-reveal>
-            <span class="glitch" data-text="MIDYA">MIDYA</span>
-            <span class="glitch hero__name--accent" data-text="RAHMANI">RAHMANI</span>
-          </h1>
           <p class="hero__role" data-reveal>
-            <span class="hero__role-static">//</span>
-            <span class="hero__role-cycle" id="role-cycle" data-roles="Adaptavist · Remote|CIBC · Toronto|Group of Gold Line · Markham|University of Waterloo|York University|Toronto · Canada">Adaptavist · Remote</span>
+            <b>NOW</b>
+            <span class="hero__role-cycle" id="role-cycle" data-roles="Adaptavist — Remote|CIBC — Toronto|Group of Gold Line — Markham|University of Waterloo|York University|Toronto · Canada">Adaptavist — Remote</span>
           </p>
-          <p class="hero__lede" id="hero-scramble" data-scramble data-reveal>
+          <p class="hero__lede" data-reveal>
             Toronto-based, with 12+ years of professional experience across Adaptavist, CIBC, and Group of Gold Line. Graduate studies at the University of Waterloo; undergraduate at York University.
           </p>
           <div class="hero__stats" id="hero-stats" data-reveal>
-            <div class="stat"><span class="stat__n stat__n--txt">12+</span><span class="stat__l">years experience</span></div>
-            <div class="stat"><span class="stat__n" data-count="2">0</span><span class="stat__l">degrees</span></div>
-            <div class="stat"><span class="stat__n stat__n--txt">YYZ</span><span class="stat__l">Toronto · ON</span></div>
-            <div class="stat"><span class="stat__n stat__n--txt">EN·FA</span><span class="stat__l">languages</span></div>
+            <div class="stat"><span class="stat__n">12+</span><span class="stat__l">Years experience</span></div>
+            <div class="stat"><span class="stat__n" data-count="2">0</span><span class="stat__l">Degrees</span></div>
+            <div class="stat"><span class="stat__n">EN·FA</span><span class="stat__l">Languages</span></div>
           </div>
           <div class="hero__cta" data-reveal>
-            <a class="btn btn--prime" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer" data-magnetic>
-              <span>Connect on LinkedIn</span>
-            </a>
-            <a class="btn btn--ghost" href="#about" data-magnetic>
-              <span>Explore profile</span>
-            </a>
+            <a class="btn btn--solid" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a>
+            <a class="btn btn--line" href="#about">Explore ↓</a>
           </div>
-        </div>
-
-        <div class="hero__stage" data-reveal data-parallax="0.04">
-          <svg class="orbit" viewBox="0 0 440 440" id="orbit" aria-hidden="true">
-            <defs>
-              <linearGradient id="og" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#00f0ff" />
-                <stop offset="50%" stop-color="#9d6bff" />
-                <stop offset="100%" stop-color="#19a7ff" />
-              </linearGradient>
-            </defs>
-            <g class="orbit__spokes" fill="none" stroke="url(#og)" stroke-width="0.6" opacity="0.4"></g>
-            <circle class="orbit__ring orbit__ring--1" cx="220" cy="220" r="120" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.7" />
-            <circle class="orbit__ring orbit__ring--2" cx="220" cy="220" r="160" fill="none" stroke="#19a7ff" stroke-width="0.6" opacity="0.45" stroke-dasharray="3 8" />
-            <circle class="orbit__ring orbit__ring--3" cx="220" cy="220" r="200" fill="none" stroke="#9d6bff" stroke-width="0.5" opacity="0.28" stroke-dasharray="1 12" />
-          </svg>
-          <div class="portrait">
-            <span class="portrait__halo" aria-hidden="true"></span>
-            <span class="portrait__sweep" aria-hidden="true"></span>
-            <img src="midya-photo.png" alt="Midya Rahmani" width="320" height="320" loading="eager" fetchpriority="high" />
-          </div>
-          <ul class="orbiters" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li><li></li></ul>
         </div>
       </div>
-      <a class="hero__scroll" href="#about" aria-label="Scroll to content">
-        <span class="hero__scroll-txt">SCROLL</span>
-        <span class="hero__scroll-line" aria-hidden="true"></span>
-      </a>
     </section>
 
     <!-- Marquee -->
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker__lane">
-        <span>BASKETBALL · MOTORCYCLES · TRAVEL · MUSIC · STOCKS · INVESTING · FINANCE · CRYPTO · AI · EMERGING&nbsp;TECH ·&nbsp;</span>
-        <span>BASKETBALL · MOTORCYCLES · TRAVEL · MUSIC · STOCKS · INVESTING · FINANCE · CRYPTO · AI · EMERGING&nbsp;TECH ·&nbsp;</span>
-      </div>
-      <div class="ticker__lane ticker__lane--alt">
-        <span>ADAPTAVIST · CIBC · GROUP OF GOLD LINE · UNIVERSITY OF WATERLOO · YORK UNIVERSITY · TORONTO ·&nbsp;</span>
-        <span>ADAPTAVIST · CIBC · GROUP OF GOLD LINE · UNIVERSITY OF WATERLOO · YORK UNIVERSITY · TORONTO ·&nbsp;</span>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__lane">
+        <span>BASKETBALL ✲ MOTORCYCLES ✲ TRAVEL ✲ MUSIC ✲ STOCKS ✲ INVESTING ✲ FINANCE ✲ CRYPTO ✲ AI ✲ EMERGING TECH ✲&nbsp;</span>
+        <span>BASKETBALL ✲ MOTORCYCLES ✲ TRAVEL ✲ MUSIC ✲ STOCKS ✲ INVESTING ✲ FINANCE ✲ CRYPTO ✲ AI ✲ EMERGING TECH ✲&nbsp;</span>
       </div>
     </div>
 
     <!-- ABOUT -->
-    <section id="about" class="band">
-      <header class="band__hd" data-reveal>
-        <span class="band__sig" data-scramble>SECTOR // ABOUT</span>
-        <h2 class="band__ttl">Profile summary</h2>
+    <section id="about" class="sec">
+      <header class="sec__hd" data-reveal>
+        <span class="sec__no">(01)</span>
+        <h2 class="sec__ttl">About</h2>
       </header>
-      <div class="about" data-reveal data-tilt data-glare>
-        <div class="about__rail" aria-hidden="true"></div>
-        <p class="about__lede">
-          Based in <strong>Toronto, Ontario</strong> with <strong>12+ years</strong> of professional experience. Currently with <strong>Adaptavist</strong>; previously with <strong>CIBC</strong> and <strong>Group of Gold Line</strong>.
+      <div class="about">
+        <p class="about__big" data-reveal>
+          Based in <mark>Toronto, Ontario</mark> with <mark>12+ years</mark> of professional experience — currently with Adaptavist; previously CIBC and Group of Gold Line.
         </p>
-        <p>
-          Graduate studies at the <strong>University of Waterloo</strong> (2021–2023) and an honours bachelor's from <strong>York University</strong> (2011–2016). Fluent in <strong>English</strong> and <strong>Persian</strong>.
-        </p>
-        <p class="about__link">
-          Full background on <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn →</a>
-        </p>
+        <div class="about__cols">
+          <p data-reveal>Graduate studies at the <b>University of Waterloo</b> (2021–2023) and an honours bachelor's from <b>York University</b> (2011–2016).</p>
+          <p data-reveal>Fluent in <b>English</b> and <b>Persian</b>. Full background on <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></p>
+        </div>
       </div>
     </section>
 
     <!-- EXPERIENCE -->
-    <section id="experience" class="band band--dim">
-      <header class="band__hd" data-reveal>
-        <span class="band__sig" data-scramble>SECTOR // EXPERIENCE</span>
-        <h2 class="band__ttl">Career timeline</h2>
+    <section id="experience" class="sec sec--ink">
+      <header class="sec__hd" data-reveal>
+        <span class="sec__no">(02)</span>
+        <h2 class="sec__ttl">Work</h2>
       </header>
-      <ol class="timeline">
-        <li class="tl" data-reveal>
-          <span class="tl__node tl__node--live" aria-hidden="true"></span>
-          <article class="tl__card" data-tilt data-glare>
-            <header class="tl__head">
-              <h3 class="tl__org">Adaptavist</h3>
-              <span class="tl__tag tl__tag--live">Current</span>
-            </header>
-            <p class="tl__meta">Feb 2021 – Present · Remote</p>
-          </article>
+      <ol class="work">
+        <li class="row row--live" data-reveal>
+          <span class="row__yr">2021 →</span>
+          <span class="row__org">Adaptavist</span>
+          <span class="row__meta">Feb 2021 – Present</span>
+          <span class="row__loc">Remote</span>
+          <span class="row__tag">● Current</span>
         </li>
-        <li class="tl" data-reveal>
-          <span class="tl__node" aria-hidden="true"></span>
-          <article class="tl__card" data-tilt data-glare>
-            <header class="tl__head">
-              <h3 class="tl__org">CIBC</h3>
-              <span class="tl__tag">Toronto</span>
-            </header>
-            <p class="tl__meta">Jul 2018 – Feb 2021 · Toronto</p>
-          </article>
+        <li class="row" data-reveal>
+          <span class="row__yr">2018</span>
+          <span class="row__org">CIBC</span>
+          <span class="row__meta">Jul 2018 – Feb 2021</span>
+          <span class="row__loc">Toronto</span>
+          <span class="row__tag">Banking</span>
         </li>
-        <li class="tl" data-reveal>
-          <span class="tl__node" aria-hidden="true"></span>
-          <article class="tl__card" data-tilt data-glare>
-            <header class="tl__head">
-              <h3 class="tl__org">CIBC</h3>
-              <span class="tl__tag">GTA</span>
-            </header>
-            <p class="tl__meta">2016 – 2018 · Greater Toronto</p>
-          </article>
+        <li class="row" data-reveal>
+          <span class="row__yr">2016</span>
+          <span class="row__org">CIBC</span>
+          <span class="row__meta">2016 – 2018</span>
+          <span class="row__loc">Greater Toronto</span>
+          <span class="row__tag">Banking</span>
         </li>
-        <li class="tl" data-reveal>
-          <span class="tl__node" aria-hidden="true"></span>
-          <article class="tl__card" data-tilt data-glare>
-            <header class="tl__head">
-              <h3 class="tl__org">Group of Gold Line</h3>
-              <span class="tl__tag">Markham</span>
-            </header>
-            <p class="tl__meta">Oct 2012 – Aug 2015 · Markham</p>
-          </article>
+        <li class="row" data-reveal>
+          <span class="row__yr">2012</span>
+          <span class="row__org">Group of Gold Line</span>
+          <span class="row__meta">Oct 2012 – Aug 2015</span>
+          <span class="row__loc">Markham</span>
+          <span class="row__tag">Telecom</span>
         </li>
       </ol>
     </section>
 
     <!-- EDUCATION -->
-    <section id="education" class="band">
-      <header class="band__hd" data-reveal>
-        <span class="band__sig" data-scramble>SECTOR // EDUCATION</span>
-        <h2 class="band__ttl">Education</h2>
+    <section id="education" class="sec">
+      <header class="sec__hd" data-reveal>
+        <span class="sec__no">(03)</span>
+        <h2 class="sec__ttl">Education</h2>
       </header>
-      <ul class="deck">
-        <li class="edu edu--waterloo" data-reveal data-tilt data-glare data-glow>
-          <div class="edu__brand">
-            <span class="edu__brand-glow" aria-hidden="true"></span>
-            <img class="edu__logo edu__logo--waterloo" src="waterloo-logo.svg" alt="University of Waterloo" width="280" height="60" loading="lazy" />
+      <ul class="edus">
+        <li class="edu" data-reveal>
+          <div class="edu__brand"><img class="edu__logo" src="waterloo-logo.svg" alt="University of Waterloo" width="280" height="60" loading="lazy" /></div>
+          <div class="edu__body">
+            <span class="edu__deg">MSc — Management Science</span>
+            <h3 class="edu__name">University of Waterloo</h3>
+            <p class="edu__meta">2021 – 2023</p>
+            <p class="edu__gpa">GPA 3.9 / 4.0</p>
           </div>
-          <span class="edu__idx">MSc</span>
-          <h3 class="edu__name">University of Waterloo</h3>
-          <p class="edu__sub">Master's · Management Science · 2021–2023</p>
-          <p class="edu__gpa">GPA 3.9 / 4.0</p>
         </li>
-        <li class="edu edu--york" data-reveal data-tilt data-glare data-glow>
-          <div class="edu__brand">
-            <span class="edu__brand-glow" aria-hidden="true"></span>
-            <img class="edu__logo edu__logo--york" src="york-logo.svg" alt="York University" width="280" height="101" loading="lazy" />
+        <li class="edu" data-reveal>
+          <div class="edu__brand"><img class="edu__logo" src="york-logo.svg" alt="York University" width="280" height="101" loading="lazy" /></div>
+          <div class="edu__body">
+            <span class="edu__deg">BCom (Hons) — Commerce &amp; IT</span>
+            <h3 class="edu__name">York University</h3>
+            <p class="edu__meta">2011 – 2016</p>
+            <p class="edu__gpa">GPA 3.3 / 4.0</p>
           </div>
-          <span class="edu__idx">BCom</span>
-          <h3 class="edu__name">York University</h3>
-          <p class="edu__sub">Honours Bachelor's · Commerce &amp; IT · 2011–2016</p>
-          <p class="edu__gpa">GPA 3.3 / 4.0</p>
         </li>
       </ul>
     </section>
 
     <!-- INTERESTS -->
-    <section id="interests" class="band band--forge">
-      <header class="band__hd" data-reveal>
-        <span class="band__sig" data-scramble>SECTOR // INTERESTS</span>
-        <h2 class="band__ttl">Beyond work</h2>
+    <section id="interests" class="sec">
+      <header class="sec__hd" data-reveal>
+        <span class="sec__no">(04)</span>
+        <h2 class="sec__ttl">Beyond work</h2>
       </header>
-      <ul class="chips" data-reveal>
-        <li class="chip" data-float>Basketball</li>
-        <li class="chip" data-float>Motorcycles</li>
-        <li class="chip" data-float>Travel</li>
-        <li class="chip" data-float>Music</li>
-        <li class="chip" data-float>Stocks &amp; markets</li>
-        <li class="chip" data-float>Investing</li>
-        <li class="chip" data-float>Finance</li>
-        <li class="chip" data-float>Crypto</li>
-        <li class="chip" data-float>AI</li>
-        <li class="chip" data-float>Emerging tech</li>
+      <ul class="tags" data-reveal>
+        <li class="tag">Basketball</li>
+        <li class="tag">Motorcycles</li>
+        <li class="tag">Travel</li>
+        <li class="tag">Music</li>
+        <li class="tag">Stocks &amp; markets</li>
+        <li class="tag">Investing</li>
+        <li class="tag">Finance</li>
+        <li class="tag">Crypto</li>
+        <li class="tag">AI</li>
+        <li class="tag">Emerging tech</li>
       </ul>
     </section>
 
-    <!-- TELEMETRY -->
-    <section id="telemetry" class="band band--dim">
-      <header class="band__hd" data-reveal>
-        <span class="band__sig" data-scramble>SECTOR // TELEMETRY</span>
-        <h2 class="band__ttl">Live stream</h2>
+    <!-- LOG -->
+    <section id="telemetry" class="sec sec--ink">
+      <header class="sec__hd" data-reveal>
+        <span class="sec__no">(05)</span>
+        <h2 class="sec__ttl">System log</h2>
       </header>
-      <div class="term" data-reveal>
-        <div class="term__bar">
-          <span class="term__dot"></span><span class="term__dot"></span><span class="term__dot"></span>
-          <code class="term__cmd">tail -f ~/signal/stream.log</code>
-        </div>
-        <ul class="term__feed" id="term-feed" aria-live="polite"></ul>
+      <div class="log" data-reveal>
+        <div class="log__bar"><span class="log__live">● LIVE</span><code>~/signal/stream.log</code></div>
+        <ul class="log__feed" id="term-feed" aria-live="polite"></ul>
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="band band--end">
-      <div class="uplink" data-reveal data-glare>
-        <span class="uplink__ring" aria-hidden="true"></span>
-        <span class="uplink__sig" data-scramble>UPLINK // OPEN</span>
-        <h2 class="uplink__ttl">Let's connect</h2>
-        <p class="uplink__txt">Open to conversation and collaboration — Toronto-based, comfortable remote.</p>
-        <div class="uplink__row">
-          <a class="btn btn--prime" id="email-cta" href="#" data-magnetic data-email-link><span></span></a>
-          <a class="btn btn--ghost btn--li" href="https://www.linkedin.com/in/midyarahmani/" rel="noopener noreferrer" target="_blank" data-magnetic>
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-            <span>linkedin.com/in/midyarahmani</span>
-          </a>
-        </div>
+    <section id="contact" class="sec sec--end">
+      <p class="kicker" data-reveal><span class="kicker__sq" aria-hidden="true"></span> UPLINK — OPEN</p>
+      <h2 class="cta__ttl" data-reveal>LET'S<br><span class="line--out">CONNECT</span></h2>
+      <p class="cta__txt" data-reveal>Open to conversation and collaboration — Toronto-based, comfortable remote.</p>
+      <div class="cta__row" data-reveal>
+        <a class="bigbtn" id="email-cta" href="#" data-email-link><span class="bigbtn__t"></span><span class="bigbtn__a">↗</span></a>
+        <a class="bigbtn bigbtn--alt" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer"><span class="bigbtn__t">linkedin.com/in/midyarahmani</span><span class="bigbtn__a">↗</span></a>
       </div>
       <footer class="foot">
         <span>© <span id="year"></span> Midya Rahmani</span>
-        <span class="foot__sep" aria-hidden="true">·</span>
         <span>Toronto, Canada</span>
-        <span class="foot__sep" aria-hidden="true">·</span>
-        <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <span>Built for the web</span>
       </footer>
     </section>
   </main>
