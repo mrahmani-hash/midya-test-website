@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#">
+<html lang="en" class="is-loading" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -23,8 +23,8 @@
   <meta name="robots" content="index, follow" />
   <meta name="thumbnail" content="https://midya.ca/og-image.jpg?v=6" />
   <link rel="canonical" href="https://midya.ca/" />
-  <meta name="theme-color" content="#ECEAE0" />
-  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#05060b" />
+  <meta name="color-scheme" content="dark" />
   <meta name="apple-mobile-web-app-title" content="Midya Rahmani" />
   <link rel="image_src" href="https://midya.ca/og-image.jpg?v=6" />
   <link rel="apple-touch-icon-precomposed" href="https://midya.ca/apple-touch-icon.png" />
@@ -39,8 +39,9 @@
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <noscript><style>.is-loading header,.is-loading main{opacity:1!important;transform:none!important}#boot{display:none!important}[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -63,12 +64,20 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <!-- Persistent WebGL aurora background -->
+  <canvas id="shader-bg" aria-hidden="true"></canvas>
+  <div class="scrim" aria-hidden="true"></div>
+
+  <!-- Boot / loader -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <span class="boot__line">midya.ca<span class="boot__dots" id="boot-dots"></span></span>
+  </div>
+
   <div class="prog" id="prog" aria-hidden="true"></div>
-  <div class="paper" aria-hidden="true"></div>
 
   <!-- Header -->
   <header class="head" id="head">
-    <div class="head__inner">
+    <div class="wrap head__inner">
       <a class="mark" href="#top" aria-label="MIDYA.CA home">MIDYA<span>.CA</span></a>
       <nav class="nav" aria-label="Primary">
         <button type="button" class="nav__btn" aria-expanded="false" aria-controls="nav-list" aria-label="Toggle menu">
@@ -82,9 +91,7 @@
           <li><a href="#contact"><i>05</i> Contact</a></li>
         </ul>
       </nav>
-      <a class="head__cta" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">
-        LinkedIn ↗
-      </a>
+      <a class="head__cta" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
     </div>
   </header>
 
@@ -92,104 +99,66 @@
     <span id="top"></span>
 
     <!-- HERO -->
-    <section class="hero">
-      <div class="hero__head">
-        <p class="kicker" data-reveal><span class="kicker__sq" aria-hidden="true"></span> PERSONAL SIGNAL — MIDYA.CA</p>
-        <p class="kicker kicker--r" data-reveal>TORONTO · CANADA / EST. 2012</p>
+    <section class="hero wrap">
+      <p class="kick" data-reveal><span class="kick__dot" aria-hidden="true"></span> PERSONAL SIGNAL — MIDYA.CA</p>
+      <h1 class="name" data-reveal><span>MIDYA</span> <span class="name--accent">RAHMANI</span></h1>
+      <p class="role" data-reveal>
+        <b>NOW</b>
+        <span class="role__cycle" id="role-cycle" data-roles="Adaptavist — Remote|CIBC — Toronto|Group of Gold Line — Markham|University of Waterloo|York University|Toronto · Canada">Adaptavist — Remote</span>
+      </p>
+      <p class="lede" data-reveal>
+        Toronto-based, with 12+ years of professional experience across Adaptavist, CIBC, and Group of Gold Line. Graduate studies at the University of Waterloo; undergraduate at York University.
+      </p>
+      <div class="stats" id="hero-stats" data-reveal>
+        <div class="stat"><span class="stat__n">12+</span><span class="stat__l">Years experience</span></div>
+        <div class="stat"><span class="stat__n" data-count="2">0</span><span class="stat__l">Degrees</span></div>
+        <div class="stat"><span class="stat__n">EN·FA</span><span class="stat__l">Languages</span></div>
       </div>
-      <h1 class="hero__name" id="hero-name">
-        <span class="line" data-reveal>MIDYA</span>
-        <span class="line line--out" data-reveal>RAHMANI</span>
-      </h1>
-      <div class="hero__grid">
-        <div class="hero__media" data-reveal>
-          <div class="shot">
-            <img src="midya-photo.png" alt="Midya Rahmani" width="520" height="520" loading="eager" fetchpriority="high" />
-          </div>
-          <div class="badge" aria-hidden="true">
-            <svg viewBox="0 0 120 120">
-              <defs><path id="badge-arc" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
-              <text><textPath href="#badge-arc" startOffset="0">OPEN TO CONNECT · TORONTO · CANADA · </textPath></text>
-            </svg>
-            <span class="badge__mark">↗</span>
-          </div>
-        </div>
-        <div class="hero__copy">
-          <p class="hero__role" data-reveal>
-            <b>NOW</b>
-            <span class="hero__role-cycle" id="role-cycle" data-roles="Adaptavist — Remote|CIBC — Toronto|Group of Gold Line — Markham|University of Waterloo|York University|Toronto · Canada">Adaptavist — Remote</span>
-          </p>
-          <p class="hero__lede" data-reveal>
-            Toronto-based, with 12+ years of professional experience across Adaptavist, CIBC, and Group of Gold Line. Graduate studies at the University of Waterloo; undergraduate at York University.
-          </p>
-          <div class="hero__stats" id="hero-stats" data-reveal>
-            <div class="stat"><span class="stat__n">12+</span><span class="stat__l">Years experience</span></div>
-            <div class="stat"><span class="stat__n" data-count="2">0</span><span class="stat__l">Degrees</span></div>
-            <div class="stat"><span class="stat__n">EN·FA</span><span class="stat__l">Languages</span></div>
-          </div>
-          <div class="hero__cta" data-reveal>
-            <a class="btn btn--solid" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a>
-            <a class="btn btn--line" href="#about">Explore ↓</a>
-          </div>
-        </div>
+      <div class="cta" data-reveal>
+        <a class="btn btn--prime" href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a>
+        <a class="btn btn--ghost" href="#about">Explore ↓</a>
       </div>
     </section>
-
-    <!-- Marquee -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__lane">
-        <span>BASKETBALL ✲ MOTORCYCLES ✲ TRAVEL ✲ MUSIC ✲ STOCKS ✲ INVESTING ✲ FINANCE ✲ CRYPTO ✲ AI ✲ EMERGING TECH ✲&nbsp;</span>
-        <span>BASKETBALL ✲ MOTORCYCLES ✲ TRAVEL ✲ MUSIC ✲ STOCKS ✲ INVESTING ✲ FINANCE ✲ CRYPTO ✲ AI ✲ EMERGING TECH ✲&nbsp;</span>
-      </div>
-    </div>
 
     <!-- ABOUT -->
-    <section id="about" class="sec">
+    <section id="about" class="sec wrap">
       <header class="sec__hd" data-reveal>
-        <span class="sec__no">(01)</span>
-        <h2 class="sec__ttl">About</h2>
+        <span class="sec__no">01</span><h2 class="sec__ttl">About</h2>
       </header>
-      <div class="about">
-        <p class="about__big" data-reveal>
-          Based in <mark>Toronto, Ontario</mark> with <mark>12+ years</mark> of professional experience — currently with Adaptavist; previously CIBC and Group of Gold Line.
+      <div class="panel" data-reveal>
+        <p class="panel__lede">
+          Based in <b>Toronto, Ontario</b> with <b>12+ years</b> of professional experience — currently with <b>Adaptavist</b>; previously <b>CIBC</b> and <b>Group of Gold Line</b>.
         </p>
-        <div class="about__cols">
-          <p data-reveal>Graduate studies at the <b>University of Waterloo</b> (2021–2023) and an honours bachelor's from <b>York University</b> (2011–2016).</p>
-          <p data-reveal>Fluent in <b>English</b> and <b>Persian</b>. Full background on <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></p>
-        </div>
+        <p>Graduate studies at the <b>University of Waterloo</b> (2021–2023) and an honours bachelor's from <b>York University</b> (2011–2016). Fluent in <b>English</b> and <b>Persian</b>.</p>
+        <p class="panel__link">Full background on <a href="https://www.linkedin.com/in/midyarahmani/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></p>
       </div>
     </section>
 
-    <!-- EXPERIENCE -->
-    <section id="experience" class="sec sec--ink">
+    <!-- WORK -->
+    <section id="experience" class="sec wrap">
       <header class="sec__hd" data-reveal>
-        <span class="sec__no">(02)</span>
-        <h2 class="sec__ttl">Work</h2>
+        <span class="sec__no">02</span><h2 class="sec__ttl">Work</h2>
       </header>
       <ol class="work">
         <li class="row row--live" data-reveal>
-          <span class="row__yr">2021 →</span>
           <span class="row__org">Adaptavist</span>
           <span class="row__meta">Feb 2021 – Present</span>
           <span class="row__loc">Remote</span>
           <span class="row__tag">● Current</span>
         </li>
         <li class="row" data-reveal>
-          <span class="row__yr">2018</span>
           <span class="row__org">CIBC</span>
           <span class="row__meta">Jul 2018 – Feb 2021</span>
           <span class="row__loc">Toronto</span>
           <span class="row__tag">Banking</span>
         </li>
         <li class="row" data-reveal>
-          <span class="row__yr">2016</span>
           <span class="row__org">CIBC</span>
           <span class="row__meta">2016 – 2018</span>
           <span class="row__loc">Greater Toronto</span>
           <span class="row__tag">Banking</span>
         </li>
         <li class="row" data-reveal>
-          <span class="row__yr">2012</span>
           <span class="row__org">Group of Gold Line</span>
           <span class="row__meta">Oct 2012 – Aug 2015</span>
           <span class="row__loc">Markham</span>
@@ -199,38 +168,32 @@
     </section>
 
     <!-- EDUCATION -->
-    <section id="education" class="sec">
+    <section id="education" class="sec wrap">
       <header class="sec__hd" data-reveal>
-        <span class="sec__no">(03)</span>
-        <h2 class="sec__ttl">Education</h2>
+        <span class="sec__no">03</span><h2 class="sec__ttl">Education</h2>
       </header>
       <ul class="edus">
-        <li class="edu" data-reveal>
+        <li class="edu panel" data-reveal>
           <div class="edu__brand"><img class="edu__logo" src="waterloo-logo.svg" alt="University of Waterloo" width="280" height="60" loading="lazy" /></div>
-          <div class="edu__body">
-            <span class="edu__deg">MSc — Management Science</span>
-            <h3 class="edu__name">University of Waterloo</h3>
-            <p class="edu__meta">2021 – 2023</p>
-            <p class="edu__gpa">GPA 3.9 / 4.0</p>
-          </div>
+          <span class="edu__deg">MSc — Management Science</span>
+          <h3 class="edu__name">University of Waterloo</h3>
+          <p class="edu__meta">2021 – 2023</p>
+          <p class="edu__gpa">GPA 3.9 / 4.0</p>
         </li>
-        <li class="edu" data-reveal>
+        <li class="edu panel" data-reveal>
           <div class="edu__brand"><img class="edu__logo" src="york-logo.svg" alt="York University" width="280" height="101" loading="lazy" /></div>
-          <div class="edu__body">
-            <span class="edu__deg">BCom (Hons) — Commerce &amp; IT</span>
-            <h3 class="edu__name">York University</h3>
-            <p class="edu__meta">2011 – 2016</p>
-            <p class="edu__gpa">GPA 3.3 / 4.0</p>
-          </div>
+          <span class="edu__deg">BCom (Hons) — Commerce &amp; IT</span>
+          <h3 class="edu__name">York University</h3>
+          <p class="edu__meta">2011 – 2016</p>
+          <p class="edu__gpa">GPA 3.3 / 4.0</p>
         </li>
       </ul>
     </section>
 
     <!-- INTERESTS -->
-    <section id="interests" class="sec">
+    <section id="interests" class="sec wrap">
       <header class="sec__hd" data-reveal>
-        <span class="sec__no">(04)</span>
-        <h2 class="sec__ttl">Beyond work</h2>
+        <span class="sec__no">04</span><h2 class="sec__ttl">Beyond work</h2>
       </header>
       <ul class="tags" data-reveal>
         <li class="tag">Basketball</li>
@@ -246,22 +209,10 @@
       </ul>
     </section>
 
-    <!-- LOG -->
-    <section id="telemetry" class="sec sec--ink">
-      <header class="sec__hd" data-reveal>
-        <span class="sec__no">(05)</span>
-        <h2 class="sec__ttl">System log</h2>
-      </header>
-      <div class="log" data-reveal>
-        <div class="log__bar"><span class="log__live">● LIVE</span><code>~/signal/stream.log</code></div>
-        <ul class="log__feed" id="term-feed" aria-live="polite"></ul>
-      </div>
-    </section>
-
     <!-- CONTACT -->
-    <section id="contact" class="sec sec--end">
-      <p class="kicker" data-reveal><span class="kicker__sq" aria-hidden="true"></span> UPLINK — OPEN</p>
-      <h2 class="cta__ttl" data-reveal>LET'S<br><span class="line--out">CONNECT</span></h2>
+    <section id="contact" class="sec wrap sec--end">
+      <p class="kick" data-reveal><span class="kick__dot" aria-hidden="true"></span> UPLINK — OPEN</p>
+      <h2 class="cta__ttl" data-reveal>Let's connect</h2>
       <p class="cta__txt" data-reveal>Open to conversation and collaboration — Toronto-based, comfortable remote.</p>
       <div class="cta__row" data-reveal>
         <a class="bigbtn" id="email-cta" href="#" data-email-link><span class="bigbtn__t"></span><span class="bigbtn__a">↗</span></a>
@@ -270,7 +221,7 @@
       <footer class="foot">
         <span>© <span id="year"></span> Midya Rahmani</span>
         <span>Toronto, Canada</span>
-        <span>Built for the web</span>
+        <span>midya.ca</span>
       </footer>
     </section>
   </main>
