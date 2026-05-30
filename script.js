@@ -168,7 +168,7 @@
     var year = document.getElementById("year");
     if (year) year.textContent = String(new Date().getFullYear());
 
-    var email = ["midyarahmani", "icloud.com"].join("@");
+    var email = ["midya.ra", "gmail.com"].join("@");
     document.querySelectorAll("[data-email-link]").forEach(function (el) {
       el.href = "mailto:" + email;
       var t = el.querySelector(".bigbtn__t") || el.querySelector("span") || el;
@@ -243,43 +243,6 @@
       nodes.forEach(function (n) { io.observe(n); });
     }
 
-    /* counters */
-    var stats = document.getElementById("hero-stats");
-    if (stats) {
-      var els = stats.querySelectorAll("[data-count]");
-      if (reduce) {
-        els.forEach(function (n) { n.textContent = n.getAttribute("data-count"); });
-      } else if (els.length) {
-        var co = new IntersectionObserver(function (entries) {
-          if (!entries[0].isIntersecting) return;
-          co.disconnect();
-          els.forEach(function (n) {
-            var target = parseInt(n.getAttribute("data-count"), 10) || 0;
-            var start = performance.now();
-            (function tick(now) {
-              var p = Math.min(1, (now - start) / 1200);
-              n.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
-              if (p < 1) requestAnimationFrame(tick);
-            })(start);
-          });
-        }, { threshold: 0.4 });
-        co.observe(stats);
-      }
-    }
-
-    /* role cycle */
-    var role = document.getElementById("role-cycle");
-    if (role && !reduce) {
-      var roles = (role.getAttribute("data-roles") || "").split("|").filter(Boolean);
-      if (roles.length > 1) {
-        var ri = 0;
-        setInterval(function () {
-          ri = (ri + 1) % roles.length;
-          role.style.opacity = "0";
-          setTimeout(function () { role.textContent = roles[ri]; role.style.opacity = "1"; }, 280);
-        }, 3000);
-      }
-    }
   }
 
   /* ===== START ===== */
