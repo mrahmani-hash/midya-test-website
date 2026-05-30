@@ -168,6 +168,17 @@
     var year = document.getElementById("year");
     if (year) year.textContent = String(new Date().getFullYear());
 
+    /* live Toronto clock */
+    var clock = document.getElementById("clock");
+    if (clock) {
+      try {
+        var fmt = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+        var tick = function () { clock.textContent = fmt.format(new Date()); };
+        tick();
+        if (!reduce) setInterval(tick, 1000);
+      } catch (e) { /* Intl tz unsupported — leave placeholder */ }
+    }
+
     var email = ["midya.ra", "gmail.com"].join("@");
     document.querySelectorAll("[data-email-link]").forEach(function (el) {
       el.href = "mailto:" + email;
