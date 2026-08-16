@@ -12,7 +12,7 @@ static_sites:
       branch: main
       deploy_on_push: true
     source_dir: /
-    build_command: chmod +x build.sh && ./build.sh
-    output_dir: _site
+    build_command: npm ci && npm run build
+    output_dir: dist
     index_document: index.html
     catchall_document: index.html

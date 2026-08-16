@@ -1,11 +1,11 @@
 {
-  "name": "Midya Rahmani — midya.ca",
+  "name": "Midya Rahmani — Personal Universe",
   "short_name": "Midya.ca",
-  "description": "Technology, AI, and innovation — personal profile.",
+  "description": "Midya Rahmani's space-themed personal profile.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#010206",
-  "theme_color": "#010206",
+  "background_color": "#020309",
+  "theme_color": "#020309",
   "icons": [
     {
       "src": "/apple-touch-icon.png",
