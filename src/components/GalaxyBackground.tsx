@@ -12,6 +12,7 @@ type GalaxyBackgroundProps = {
 type QualityProfile = {
   dpr: number;
   stars: number;
+  flightStars: number;
   galaxyStars: number;
   dust: number;
   bloomStrength: number;
@@ -32,6 +33,7 @@ function getQualityProfile(): QualityProfile {
     return {
       dpr: Math.min(dpr, 1.15),
       stars: 900,
+      flightStars: 240,
       galaxyStars: 1200,
       dust: 240,
       bloomStrength: 0.42,
@@ -43,6 +45,7 @@ function getQualityProfile(): QualityProfile {
     return {
       dpr: Math.min(dpr, 1.5),
       stars: 1600,
+      flightStars: 440,
       galaxyStars: 2200,
       dust: 500,
       bloomStrength: 0.58,
@@ -53,6 +56,7 @@ function getQualityProfile(): QualityProfile {
   return {
     dpr: Math.min(dpr, 1.8),
     stars: 2400,
+    flightStars: 680,
     galaxyStars: 3400,
     dust: 800,
     bloomStrength: 0.72,
@@ -100,6 +104,103 @@ function createStarField(count: number, radius: number): THREE.Points {
   });
 
   return new THREE.Points(geometry, material);
+}
+
+function createFlightStars(
+  count: number,
+): THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> {
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const speeds = new Float32Array(count);
+  const phases = new Float32Array(count);
+  const palette = [
+    new THREE.Color("#eef9ff"),
+    new THREE.Color("#8fe9ff"),
+    new THREE.Color("#b9a7ff"),
+    new THREE.Color("#ffe7ba"),
+  ];
+  const aspect = Math.max(0.7, window.innerWidth / window.innerHeight);
+
+  for (let index = 0; index < count; index += 1) {
+    const positionIndex = index * 3;
+    const depth = Math.random();
+    const color = palette[Math.floor(Math.random() * palette.length)];
+    positions[positionIndex] =
+      (Math.random() - 0.5) * (52 + Math.min(aspect, 1.8) * 20);
+    positions[positionIndex + 1] = (Math.random() - 0.5) * 46;
+    positions[positionIndex + 2] = -62 + depth * 68;
+    colors[positionIndex] = color?.r ?? 1;
+    colors[positionIndex + 1] = color?.g ?? 1;
+    colors[positionIndex + 2] = color?.b ?? 1;
+    sizes[index] = 0.7 + Math.random() * 1.65;
+    speeds[index] = 3.6 + Math.random() * 7.8;
+    phases[index] = Math.random() * Math.PI * 2;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
+  geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+
+  const material = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    vertexColors: true,
+    uniforms: {
+      uTime: { value: 0 },
+    },
+    vertexShader: `
+      precision highp float;
+      attribute float aSize;
+      attribute float aSpeed;
+      attribute float aPhase;
+      uniform float uTime;
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        vec3 animated = position;
+        animated.z = mod(position.z + uTime * aSpeed + 62.0, 68.0) - 62.0;
+        vec4 viewPosition = modelViewMatrix * vec4(animated, 1.0);
+        float viewDepth = max(1.0, -viewPosition.z);
+        float twinkle = 0.62 + 0.38 * sin(uTime * 2.3 + aPhase);
+        float nearGlow = 1.0 - smoothstep(22.0, 86.0, viewDepth);
+        vAlpha = twinkle * (0.42 + nearGlow * 0.58);
+        vColor = color;
+        gl_PointSize = clamp(aSize * (78.0 / viewDepth), 1.0, 8.5);
+        gl_Position = projectionMatrix * viewPosition;
+      }
+    `,
+    fragmentShader: `
+      precision highp float;
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        vec2 point = gl_PointCoord - 0.5;
+        float distanceToCore = length(point);
+        float core = smoothstep(0.42, 0.02, distanceToCore);
+        float verticalRay =
+          smoothstep(0.075, 0.0, abs(point.x)) *
+          smoothstep(0.5, 0.06, abs(point.y));
+        float horizontalRay =
+          smoothstep(0.075, 0.0, abs(point.y)) *
+          smoothstep(0.5, 0.06, abs(point.x));
+        float sparkle = max(core, max(verticalRay, horizontalRay) * 0.72);
+        float alpha = sparkle * vAlpha;
+        if (alpha < 0.025) discard;
+        gl_FragColor = vec4(vColor, alpha);
+      }
+    `,
+  });
+
+  const stars = new THREE.Points(geometry, material);
+  stars.renderOrder = 6;
+  return stars;
 }
 
 function createSpiralGalaxy(count: number): THREE.Points {
@@ -371,6 +472,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
     scene.add(ambient, keyLight, rimLight);
 
     const outerStars = createStarField(quality.stars, 76);
+    const flightStars = createFlightStars(quality.flightStars);
     const galaxy = createSpiralGalaxy(quality.galaxyStars);
     const dust = createDust(quality.dust);
     const nebula = createNebula();
@@ -386,7 +488,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
     );
     moon.position.set(-7.2, 4.7, -8);
 
-    scene.add(outerStars, galaxy, dust, nebula, saturn, moon);
+    scene.add(outerStars, flightStars, galaxy, dust, nebula, saturn, moon);
 
     const composer = new EffectComposer(renderer);
     composer.setPixelRatio(quality.dpr);
@@ -422,6 +524,8 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
 
       outerStars.rotation.y = elapsed * 0.003;
       outerStars.rotation.x = Math.sin(elapsed * 0.03) * 0.018;
+      const flightTime = flightStars.material.uniforms.uTime;
+      if (flightTime) flightTime.value = elapsed;
       galaxy.rotation.y = elapsed * 0.016;
       galaxy.rotation.z = -0.12 + elapsed * 0.004;
       dust.rotation.y = -elapsed * 0.007;
@@ -484,6 +588,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       outputPass.dispose();
       composer.dispose();
       disposeObject(outerStars);
+      disposeObject(flightStars);
       disposeObject(galaxy);
       disposeObject(dust);
       disposeObject(nebula);

@@ -82,7 +82,7 @@ metadata. The social image currently uses cache-bust `?v=7`.
 
 `src/components/GalaxyBackground.tsx` owns the Three.js lifecycle. It creates:
 
-- Procedural spiral galaxy points and outer star field
+- Procedural spiral galaxy, outer star field, and animated star-flight layer
 - Shader-based procedural nebula
 - Dust, a planet, a Saturn-like planet, and original rings
 - Pointer depth/parallax and restrained Unreal Bloom
@@ -95,7 +95,7 @@ Full 3D remains on desktop and capable phones. The renderer selects a quality
 profile using viewport size, device memory, hardware concurrency, and device
 pixel ratio:
 
-- Mobile/low power: lower DPR and particle counts, 40 fps cap, reduced bloom
+- Mobile/low power: lower DPR and star counts, 40 fps cap, reduced bloom
 - Mid-tier: moderate DPR and particles, 55 fps cap
 - High-tier: higher DPR and particles, 60 fps cap
 
