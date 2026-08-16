@@ -46,6 +46,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+#root {
+  position: relative;
+  min-height: 100svh;
+  isolation: isolate;
+}
+
 body,
 button,
 a {
@@ -97,9 +103,10 @@ img {
 .galaxy-background {
   position: fixed;
   inset: 0;
-  z-index: -5;
+  z-index: 0;
   overflow: hidden;
   background: #020309;
+  pointer-events: none;
 }
 
 .galaxy-background canvas {
@@ -120,7 +127,7 @@ img {
 .space-noise {
   position: fixed;
   inset: 0;
-  z-index: -4;
+  z-index: 1;
   pointer-events: none;
 }
 
@@ -382,7 +389,7 @@ img {
 
 main {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .hero,
