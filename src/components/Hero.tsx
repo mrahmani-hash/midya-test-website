@@ -18,11 +18,11 @@ export function Hero() {
         >
           <motion.div className="mission-tag" variants={rise}>
             <span className="mission-tag__signal" aria-hidden="true" />
-            Personal transmission · Toronto
+            Personal profile · Toronto
           </motion.div>
 
           <motion.p className="hero__kicker" variants={rise}>
-            Signal origin · {profile.coordinates}
+            Based in · {profile.location}
           </motion.p>
           <motion.h1 id="hero-title" variants={rise}>
             <span>Midya</span>
@@ -42,7 +42,7 @@ export function Hero() {
               <span aria-hidden="true">↗</span>
             </a>
             <a className="button button--ghost" href="#about">
-              Enter orbit
+              Explore profile
               <span aria-hidden="true">↓</span>
             </a>
           </motion.div>
@@ -52,7 +52,7 @@ export function Hero() {
               <dd>{profile.yearsExperience} years</dd>
             </div>
             <div>
-              <dt>Current signal</dt>
+              <dt>Current company</dt>
               <dd>Adaptavist</dd>
             </div>
             <div>
@@ -87,12 +87,12 @@ export function Hero() {
             <span className="portrait-frame__scan" aria-hidden="true" />
           </div>
           <div className="portrait-label portrait-label--top">
-            <span>IDENT</span>
-            MR-043
+            <span>PROFILE</span>
+            Midya Rahmani
           </div>
           <div className="portrait-label portrait-label--bottom">
-            <span>STATUS</span>
-            Signal active
+            <span>LOCATION</span>
+            Toronto, Canada
           </div>
         </motion.div>
       </div>

@@ -69,6 +69,8 @@ Keep the profile generic unless Midya asks otherwise:
 - Organizations: Adaptavist, CIBC, and Group of Gold Line
 - Show dates and locations, but no role titles, skills grid, certifications,
   projects, or role-specific claims
+- Keep visible copy professionally neutral; the visual design can remain cosmic
+  without space-themed labels, metaphors, or status language
 - Education: University of Waterloo, GPA `3.9 / 4.0`; York University,
   GPA `3.3 / 4.0`
 - LinkedIn: `https://www.linkedin.com/in/midyarahmani/`
@@ -76,7 +78,7 @@ Keep the profile generic unless Midya asks otherwise:
   assembled at runtime to reduce simple scraping
 
 `index.html` contains canonical, Open Graph, Twitter, and Person JSON-LD
-metadata. The social image currently uses cache-bust `?v=7`.
+metadata. The social image currently uses cache-bust `?v=8`.
 
 ## Galaxy renderer
 

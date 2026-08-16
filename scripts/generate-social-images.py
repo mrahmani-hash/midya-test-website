@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate original galaxy-themed social and touch images for midya.ca."""
+"""Generate original social and touch images for midya.ca."""
 from __future__ import annotations
 
 import math
@@ -198,8 +198,8 @@ def make_og_image() -> Image.Image:
 
     draw.text((94, 130), "MIDYA", font=display, fill=INK)
     draw.text((94, 215), "RAHMANI", font=display, fill=INK)
-    draw.text((98, 320), "PERSONAL UNIVERSE", font=display_small, fill=CYAN)
-    draw.text((99, 374), "A personal signal from Toronto.", font=ui, fill=(*INK, 210))
+    draw.text((98, 320), "PERSONAL PROFILE", font=display_small, fill=CYAN)
+    draw.text((99, 374), "Toronto, Ontario · Canada", font=ui, fill=(*INK, 210))
     draw.text(
         (99, 426),
         "ADAPTAVIST  ·  CIBC  ·  WATERLOO  ·  YORK",

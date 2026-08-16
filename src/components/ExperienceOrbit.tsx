@@ -7,9 +7,9 @@ export function ExperienceOrbit() {
     <section className="section" id="experience">
       <SectionHeader
         number="02"
-        eyebrow="Orbital history"
+        eyebrow="Professional history"
         title="Professional journey"
-        description="Organizations and coordinates along the path—kept intentionally simple."
+        description="A concise view of the organizations that have been part of my professional journey."
       />
 
       <ol className="orbit-timeline">
@@ -26,8 +26,8 @@ export function ExperienceOrbit() {
             </span>
             <article className="orbit-card">
               <div className="orbit-card__meta">
-                <span>ORBIT {String(index + 1).padStart(2, "0")}</span>
-                {entry.active ? <em>Active signal</em> : <span>Archived signal</span>}
+                <span>EXPERIENCE {String(index + 1).padStart(2, "0")}</span>
+                {entry.active ? <em>Current</em> : <span>Previous</span>}
               </div>
               <h3>{entry.organization}</h3>
               <p>

@@ -12,13 +12,12 @@ export type Education = {
   gpa: string;
   logo: string;
   accent: "gold" | "red";
-  orbit: string;
+  label: string;
 };
 
 export const profile = {
   name: "Midya Rahmani",
   location: "Toronto, Ontario",
-  coordinates: "43.6532° N · 79.3832° W",
   yearsExperience: "12+",
   linkedin: "https://www.linkedin.com/in/midyarahmani/",
   email: {
@@ -58,7 +57,7 @@ export const profile = {
       gpa: "3.9 / 4.0",
       logo: "/waterloo-logo.svg",
       accent: "gold",
-      orbit: "Graduate orbit",
+      label: "Graduate studies",
     },
     {
       institution: "York University",
@@ -67,7 +66,7 @@ export const profile = {
       gpa: "3.3 / 4.0",
       logo: "/york-logo.svg",
       accent: "red",
-      orbit: "Foundation orbit",
+      label: "Undergraduate studies",
     },
   ] satisfies Education[],
   interests: [

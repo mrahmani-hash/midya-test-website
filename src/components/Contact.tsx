@@ -30,9 +30,9 @@ export function Contact() {
     <section className="section section--contact" id="contact">
       <SectionHeader
         number="05"
-        eyebrow="Open channel"
+        eyebrow="Get in touch"
         title="Start a conversation"
-        description="The signal is open for conversation, connection, and thoughtful collaboration."
+        description="Open to conversation, connection, and thoughtful collaboration."
       />
 
       <motion.div
@@ -44,7 +44,7 @@ export function Contact() {
       >
         <div className="contact-console__status">
           <span aria-hidden="true" />
-          TRANSMISSION READY
+          AVAILABLE TO CONNECT
         </div>
         <h3>Say hello from wherever you are.</h3>
         <div className="contact-console__links">
@@ -68,7 +68,7 @@ export function Contact() {
       <footer className="site-footer">
         <span>© {new Date().getFullYear()} Midya Rahmani</span>
         <span>Toronto · {torontoTime}</span>
-        <a href="#top">Return to orbit ↑</a>
+        <a href="#top">Back to top ↑</a>
       </footer>
     </section>
   );

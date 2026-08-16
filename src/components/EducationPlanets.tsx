@@ -7,9 +7,9 @@ export function EducationPlanets() {
     <section className="section" id="education">
       <SectionHeader
         number="03"
-        eyebrow="Academic coordinates"
+        eyebrow="Academic background"
         title="Education"
-        description="Two institutions in the constellation, each part of the same trajectory."
+        description="Graduate and undergraduate studies from two Canadian universities."
       />
 
       <div className="education-grid">
@@ -36,7 +36,7 @@ export function EducationPlanets() {
                 loading="lazy"
               />
             </div>
-            <p className="education-planet__orbit">{education.orbit}</p>
+            <p className="education-planet__orbit">{education.label}</p>
             <h3>{education.institution}</h3>
             <p className="education-planet__degree">{education.degree}</p>
             <dl>

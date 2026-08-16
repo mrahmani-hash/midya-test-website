@@ -8,9 +8,9 @@ export function InterestsSignals() {
     <section className="section" id="interests">
       <SectionHeader
         number="04"
-        eyebrow="Open frequencies"
+        eyebrow="Personal interests"
         title="Beyond work"
-        description="The signals I keep returning to, from markets and machines to movement and exploration."
+        description="The topics and activities I keep returning to, from markets and technology to movement and exploration."
       />
 
       <motion.div

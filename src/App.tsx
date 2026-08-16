@@ -78,11 +78,11 @@ function App() {
           <span>M</span>
           <i />
         </div>
-        <p>CALIBRATING PERSONAL UNIVERSE</p>
+        <p>LOADING PERSONAL PROFILE</p>
         <div className="boot-screen__bar">
           <span className={galaxyReady ? "is-ready" : ""} />
         </div>
-        <small>{galaxyReady ? "SIGNAL LOCKED" : "MAPPING STAR FIELD"}</small>
+        <small>{galaxyReady ? "READY" : "PREPARING EXPERIENCE"}</small>
       </div>
 
       <Navigation />

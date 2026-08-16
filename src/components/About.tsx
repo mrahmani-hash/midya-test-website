@@ -9,7 +9,7 @@ export function About() {
         number="01"
         eyebrow="Profile data"
         title="A little about me"
-        description="A personal signal from Toronto, shaped by curiosity, movement, and a view toward what comes next."
+        description="A personal profile shaped by curiosity, movement, and a view toward what comes next."
       />
 
       <div className="about-grid">
@@ -38,7 +38,7 @@ export function About() {
 
         <motion.aside
           className="identity-console"
-          aria-label="Identity coordinates"
+          aria-label="Profile details"
           initial={{ opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.35 }}
