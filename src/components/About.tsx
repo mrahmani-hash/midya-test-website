@@ -55,10 +55,6 @@ export function About() {
               <dd>{profile.location}</dd>
             </div>
             <div>
-              <dt>Languages</dt>
-              <dd>English · Persian</dd>
-            </div>
-            <div>
               <dt>Perspective</dt>
               <dd>Global · Future-facing</dd>
             </div>

@@ -23,7 +23,7 @@ export function Hero() {
             Midya Rahmani
           </motion.h1>
           <motion.p className="hero__subtitle" variants={rise}>
-            Professional background · Education · Interests
+            Technology, AI, and thoughtful experimentation
           </motion.p>
           <motion.p className="hero__lede" variants={rise}>
             {profile.hero}
