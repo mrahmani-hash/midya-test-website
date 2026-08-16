@@ -34,10 +34,7 @@ export function Navigation() {
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Midya Rahmani, home">
-        <span className="brand__orbit" aria-hidden="true">
-          <span>M</span>
-        </span>
-        <span className="brand__text">MIDYA.CA</span>
+        <span className="brand__text">Midya</span>
       </a>
 
       <button

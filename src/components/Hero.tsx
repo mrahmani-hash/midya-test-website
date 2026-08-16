@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { profile } from "../data/profile";
+import { emailAddress, profile } from "../data/profile";
 
 const rise = {
   hidden: { opacity: 0, y: 24 },
@@ -16,50 +16,40 @@ export function Hero() {
           animate="visible"
           transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
         >
-          <motion.div className="mission-tag" variants={rise}>
-            <span className="mission-tag__signal" aria-hidden="true" />
-            Personal profile · Toronto
-          </motion.div>
-
           <motion.p className="hero__kicker" variants={rise}>
-            Based in · {profile.location}
+            {profile.location}
           </motion.p>
           <motion.h1 id="hero-title" variants={rise}>
-            <span>Midya</span>
-            <strong>Rahmani</strong>
+            Midya Rahmani
           </motion.h1>
+          <motion.p className="hero__subtitle" variants={rise}>
+            Professional background · Education · Interests
+          </motion.p>
           <motion.p className="hero__lede" variants={rise}>
             {profile.hero}
           </motion.p>
           <motion.div className="hero__actions" variants={rise}>
+            <a className="button button--primary" href="#about">
+              About me
+              <span aria-hidden="true">↓</span>
+            </a>
             <a
-              className="button button--primary"
+              className="hero__social-link"
               href={profile.linkedin}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn"
             >
-              Connect on LinkedIn
-              <span aria-hidden="true">↗</span>
+              in
             </a>
-            <a className="button button--ghost" href="#about">
-              Explore profile
-              <span aria-hidden="true">↓</span>
+            <a
+              className="hero__social-link"
+              href={`mailto:${emailAddress}`}
+              aria-label="Email"
+            >
+              @
             </a>
           </motion.div>
-          <motion.dl className="hero__metrics" variants={rise}>
-            <div>
-              <dt>Experience</dt>
-              <dd>{profile.yearsExperience} years</dd>
-            </div>
-            <div>
-              <dt>Current company</dt>
-              <dd>Adaptavist</dd>
-            </div>
-            <div>
-              <dt>Base</dt>
-              <dd>Toronto · CA</dd>
-            </div>
-          </motion.dl>
         </motion.div>
 
         <motion.div
@@ -68,14 +58,6 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, delay: 0.45 }}
         >
-          <div className="portrait-orbit portrait-orbit--outer" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
-          <div className="portrait-orbit portrait-orbit--inner" aria-hidden="true">
-            <i />
-          </div>
           <div className="portrait-frame">
             <img
               src="/midya-photo.webp"
@@ -85,14 +67,6 @@ export function Hero() {
               fetchPriority="high"
             />
             <span className="portrait-frame__scan" aria-hidden="true" />
-          </div>
-          <div className="portrait-label portrait-label--top">
-            <span>PROFILE</span>
-            Midya Rahmani
-          </div>
-          <div className="portrait-label portrait-label--bottom">
-            <span>LOCATION</span>
-            Toronto, Canada
           </div>
         </motion.div>
       </div>

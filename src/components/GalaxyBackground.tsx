@@ -32,11 +32,11 @@ function getQualityProfile(): QualityProfile {
   if (mobile || cores <= 4 || memory <= 4) {
     return {
       dpr: Math.min(dpr, 1.15),
-      stars: 900,
-      flightStars: 240,
-      galaxyStars: 1200,
-      dust: 240,
-      bloomStrength: 0.42,
+      stars: 700,
+      flightStars: 130,
+      galaxyStars: 900,
+      dust: 120,
+      bloomStrength: 0.38,
       frameInterval: 1000 / 40,
     };
   }
@@ -44,32 +44,55 @@ function getQualityProfile(): QualityProfile {
   if (cores <= 8 || memory <= 8) {
     return {
       dpr: Math.min(dpr, 1.5),
-      stars: 1600,
-      flightStars: 440,
-      galaxyStars: 2200,
-      dust: 500,
-      bloomStrength: 0.58,
+      stars: 1300,
+      flightStars: 250,
+      galaxyStars: 1800,
+      dust: 260,
+      bloomStrength: 0.5,
       frameInterval: 1000 / 55,
     };
   }
 
   return {
     dpr: Math.min(dpr, 1.8),
-    stars: 2400,
-    flightStars: 680,
-    galaxyStars: 3400,
-    dust: 800,
-    bloomStrength: 0.72,
+    stars: 2200,
+    flightStars: 420,
+    galaxyStars: 2800,
+    dust: 450,
+    bloomStrength: 0.62,
     frameInterval: 1000 / 60,
   };
 }
 
-function createStarField(count: number, radius: number): THREE.Points {
+function createStarTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 64;
+  canvas.height = 64;
+  const context = canvas.getContext("2d");
+  if (context) {
+    const glow = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+    glow.addColorStop(0, "rgba(255,255,255,1)");
+    glow.addColorStop(0.12, "rgba(255,255,255,0.98)");
+    glow.addColorStop(0.38, "rgba(210,231,255,0.58)");
+    glow.addColorStop(1, "rgba(170,210,255,0)");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, 64, 64);
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function createStarField(
+  count: number,
+  radius: number,
+  starTexture: THREE.Texture,
+): THREE.Points {
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
-  const cool = new THREE.Color("#8fd8ff");
-  const warm = new THREE.Color("#fff1d5");
-  const violet = new THREE.Color("#b29cff");
+  const cool = new THREE.Color("#dceeff");
+  const warm = new THREE.Color("#fff7e8");
+  const violet = new THREE.Color("#b7c6ff");
 
   for (let index = 0; index < count; index += 1) {
     const distance = radius * (0.45 + Math.random() * 0.55);
@@ -94,10 +117,11 @@ function createStarField(count: number, radius: number): THREE.Points {
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
   const material = new THREE.PointsMaterial({
-    size: 0.095,
+    map: starTexture,
+    size: 0.22,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.82,
+    opacity: 0.76,
     vertexColors: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
@@ -203,12 +227,15 @@ function createFlightStars(
   return stars;
 }
 
-function createSpiralGalaxy(count: number): THREE.Points {
+function createSpiralGalaxy(
+  count: number,
+  starTexture: THREE.Texture,
+): THREE.Points {
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
-  const core = new THREE.Color("#f4fbff");
-  const middle = new THREE.Color("#9d8cff");
-  const edge = new THREE.Color("#2988ff");
+  const core = new THREE.Color("#f7fbff");
+  const middle = new THREE.Color("#c7d0db");
+  const edge = new THREE.Color("#6f8299");
   const arms = 5;
 
   for (let index = 0; index < count; index += 1) {
@@ -242,10 +269,11 @@ function createSpiralGalaxy(count: number): THREE.Points {
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
   const material = new THREE.PointsMaterial({
-    size: 0.11,
+    map: starTexture,
+    size: 0.18,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.75,
+    opacity: 0.62,
     vertexColors: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
@@ -257,7 +285,10 @@ function createSpiralGalaxy(count: number): THREE.Points {
   return points;
 }
 
-function createDust(count: number): THREE.Points {
+function createDust(
+  count: number,
+  starTexture: THREE.Texture,
+): THREE.Points {
   const positions = new Float32Array(count * 3);
 
   for (let index = 0; index < count; index += 1) {
@@ -270,14 +301,46 @@ function createDust(count: number): THREE.Points {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   const material = new THREE.PointsMaterial({
-    color: "#87d7ff",
-    size: 0.035,
-    opacity: 0.45,
+    color: "#a9bfd6",
+    map: starTexture,
+    size: 0.14,
+    opacity: 0.22,
     transparent: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
   });
   return new THREE.Points(geometry, material);
+}
+
+function createConstellationLines(): THREE.LineSegments {
+  const positions: number[] = [];
+  for (let cluster = 0; cluster < 38; cluster += 1) {
+    let x = (Math.random() - 0.5) * 72;
+    let y = (Math.random() - 0.5) * 38;
+    const z = -16 - Math.random() * 34;
+    const segments = 2 + Math.floor(Math.random() * 3);
+    for (let segment = 0; segment < segments; segment += 1) {
+      const nextX = x + (Math.random() - 0.5) * 8;
+      const nextY = y + (Math.random() - 0.5) * 6;
+      positions.push(x, y, z, nextX, nextY, z);
+      x = nextX;
+      y = nextY;
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3),
+  );
+  const material = new THREE.LineBasicMaterial({
+    color: "#5e86a8",
+    transparent: true,
+    opacity: 0.12,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  return new THREE.LineSegments(geometry, material);
 }
 
 function createNebula(): THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> {
@@ -287,7 +350,7 @@ function createNebula(): THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> {
     depthWrite: false,
     uniforms: {
       uTime: { value: 0 },
-      uIntensity: { value: 0.78 },
+      uIntensity: { value: 0.58 },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -336,12 +399,12 @@ function createNebula(): THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> {
         cloud += fbm(centered * 6.0 - vec2(time * 0.6, time)) * 0.42;
         float vignette = smoothstep(0.86, 0.08, length(centered));
         float ribbon = exp(-abs(centered.y + sin(centered.x * 4.0 + time) * 0.11) * 5.2);
-        vec3 blue = vec3(0.025, 0.19, 0.48);
-        vec3 violet = vec3(0.29, 0.075, 0.58);
-        vec3 cyan = vec3(0.04, 0.55, 0.72);
-        vec3 color = mix(blue, violet, smoothstep(0.28, 0.82, cloud));
-        color = mix(color, cyan, ribbon * 0.24);
-        float alpha = (cloud * 0.38 + ribbon * 0.12) * vignette * uIntensity;
+        vec3 blue = vec3(0.012, 0.045, 0.09);
+        vec3 slate = vec3(0.08, 0.12, 0.18);
+        vec3 silver = vec3(0.22, 0.25, 0.30);
+        vec3 color = mix(blue, slate, smoothstep(0.22, 0.7, cloud));
+        color = mix(color, silver, ribbon * 0.2);
+        float alpha = (cloud * 0.3 + ribbon * 0.08) * vignette * uIntensity;
         gl_FragColor = vec4(color, alpha);
       }
     `,
@@ -355,23 +418,23 @@ function createNebula(): THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> {
 function createSaturn(): THREE.Group {
   const group = new THREE.Group();
   const planet = new THREE.Mesh(
-    new THREE.SphereGeometry(2.1, 48, 32),
+    new THREE.SphereGeometry(1.65, 40, 28),
     new THREE.MeshStandardMaterial({
-      color: "#5f6fa5",
-      emissive: "#17204a",
-      emissiveIntensity: 0.65,
-      roughness: 0.72,
+      color: "#827e75",
+      emissive: "#17212c",
+      emissiveIntensity: 0.35,
+      roughness: 0.78,
       metalness: 0.08,
     }),
   );
   planet.scale.y = 0.94;
 
   const ring = new THREE.Mesh(
-    new THREE.RingGeometry(2.75, 4.2, 96),
+    new THREE.RingGeometry(2.1, 3.25, 80),
     new THREE.MeshBasicMaterial({
-      color: "#91cfff",
+      color: "#b7c0c7",
       transparent: true,
-      opacity: 0.32,
+      opacity: 0.28,
       side: THREE.DoubleSide,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -381,7 +444,7 @@ function createSaturn(): THREE.Group {
   ring.rotation.z = -0.2;
 
   const ringInner = new THREE.Mesh(
-    new THREE.RingGeometry(2.45, 2.68, 96),
+    new THREE.RingGeometry(1.92, 2.04, 80),
     new THREE.MeshBasicMaterial({
       color: "#d9e9ff",
       transparent: true,
@@ -393,14 +456,82 @@ function createSaturn(): THREE.Group {
   ringInner.rotation.copy(ring.rotation);
 
   group.add(planet, ring, ringInner);
-  group.position.set(7.4, -3.8, -11);
+  group.position.set(8.5, -5.7, -18);
   group.rotation.set(0.08, -0.28, -0.08);
+  return group;
+}
+
+function createSun(): THREE.Group {
+  const group = new THREE.Group();
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(0.78, 32, 22),
+    new THREE.MeshBasicMaterial({ color: "#ffb451" }),
+  );
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(1.42, 28, 20),
+    new THREE.MeshBasicMaterial({
+      color: "#ff8a32",
+      transparent: true,
+      opacity: 0.12,
+      side: THREE.BackSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+  group.add(core, halo);
+  group.position.set(-16, -10, -22);
+  return group;
+}
+
+function createSpaceStation(): THREE.Group {
+  const group = new THREE.Group();
+  const metal = new THREE.MeshStandardMaterial({
+    color: "#b5c2cd",
+    emissive: "#122b3b",
+    emissiveIntensity: 0.45,
+    metalness: 0.72,
+    roughness: 0.32,
+  });
+  const panel = new THREE.MeshStandardMaterial({
+    color: "#296fa7",
+    emissive: "#0a5c83",
+    emissiveIntensity: 0.55,
+    metalness: 0.52,
+    roughness: 0.38,
+  });
+  const hull = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.22, 0.28, 2.2, 12),
+    metal,
+  );
+  hull.rotation.z = Math.PI / 2;
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.64, 0.08, 8, 32),
+    metal.clone(),
+  );
+  ring.rotation.y = Math.PI / 2;
+  const leftPanel = new THREE.Mesh(
+    new THREE.BoxGeometry(0.9, 0.06, 0.48),
+    panel,
+  );
+  leftPanel.position.x = -1.38;
+  const rightPanel = leftPanel.clone();
+  rightPanel.position.x = 1.38;
+  group.add(hull, ring, leftPanel, rightPanel);
+  group.position.set(0.5, 7.7, -19);
+  group.rotation.set(0.22, -0.3, -0.08);
   return group;
 }
 
 function disposeObject(object: THREE.Object3D): void {
   object.traverse((child) => {
-    if (!(child instanceof THREE.Mesh || child instanceof THREE.Points)) return;
+    if (
+      !(
+        child instanceof THREE.Mesh ||
+        child instanceof THREE.Points ||
+        child instanceof THREE.LineSegments
+      )
+    )
+      return;
     child.geometry.dispose();
     const materials = Array.isArray(child.material)
       ? child.material
@@ -471,24 +602,39 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
     rimLight.position.set(-12, -4, -2);
     scene.add(ambient, keyLight, rimLight);
 
-    const outerStars = createStarField(quality.stars, 76);
+    const starTexture = createStarTexture();
+    const outerStars = createStarField(quality.stars, 76, starTexture);
     const flightStars = createFlightStars(quality.flightStars);
-    const galaxy = createSpiralGalaxy(quality.galaxyStars);
-    const dust = createDust(quality.dust);
+    const galaxy = createSpiralGalaxy(quality.galaxyStars, starTexture);
+    const dust = createDust(quality.dust, starTexture);
+    const constellations = createConstellationLines();
     const nebula = createNebula();
     const saturn = createSaturn();
+    const sun = createSun();
+    const station = createSpaceStation();
     const moon = new THREE.Mesh(
-      new THREE.SphereGeometry(0.72, 28, 20),
+      new THREE.SphereGeometry(0.42, 24, 18),
       new THREE.MeshStandardMaterial({
-        color: "#627bd8",
-        emissive: "#17235b",
-        emissiveIntensity: 0.55,
+        color: "#788694",
+        emissive: "#172635",
+        emissiveIntensity: 0.28,
         roughness: 0.8,
       }),
     );
-    moon.position.set(-7.2, 4.7, -8);
+    moon.position.set(12, 7, -20);
 
-    scene.add(outerStars, flightStars, galaxy, dust, nebula, saturn, moon);
+    scene.add(
+      outerStars,
+      flightStars,
+      galaxy,
+      dust,
+      constellations,
+      nebula,
+      saturn,
+      sun,
+      station,
+      moon,
+    );
 
     const composer = new EffectComposer(renderer);
     composer.setPixelRatio(quality.dpr);
@@ -510,6 +656,8 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
     let animationFrame = 0;
     let running = !reduceMotion;
     let lastRender = 0;
+    let scrollTarget = 0;
+    let scrollProgress = 0;
 
     const handlePointer = (event: PointerEvent) => {
       pointerTarget.x = (event.clientX / window.innerWidth - 0.5) * 2;
@@ -518,6 +666,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
 
     const render = (elapsed: number) => {
       pointer.lerp(pointerTarget, 0.035);
+      scrollProgress += (scrollTarget - scrollProgress) * 0.045;
       camera.position.x = pointer.x * 0.55;
       camera.position.y = 0.5 + pointer.y * 0.34;
       camera.lookAt(0, 0, -10);
@@ -529,12 +678,37 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       galaxy.rotation.y = elapsed * 0.016;
       galaxy.rotation.z = -0.12 + elapsed * 0.004;
       dust.rotation.y = -elapsed * 0.007;
+      constellations.rotation.y = elapsed * 0.0015;
       saturn.rotation.y = -0.28 + elapsed * 0.045;
-      saturn.position.y = -3.8 + Math.sin(elapsed * 0.28) * 0.28;
-      moon.position.y = 4.7 + Math.sin(elapsed * 0.35) * 0.35;
+      saturn.position.x = 25 - scrollProgress * 13;
+      saturn.position.y =
+        -14 + scrollProgress * 11 + Math.sin(elapsed * 0.28) * 0.24;
+      sun.rotation.y = elapsed * 0.025;
+      sun.position.x = -30 + scrollProgress * 20;
+      sun.position.y =
+        -15 + scrollProgress * 20 + Math.sin(elapsed * 0.18) * 0.2;
+      station.rotation.y = -0.3 + elapsed * 0.08;
+      station.rotation.z = -0.08 + Math.sin(elapsed * 0.22) * 0.06;
+      station.position.x = 0.5 - scrollProgress * 7;
+      station.position.y = 7.7 - scrollProgress * 4;
+      moon.position.x = 18 - scrollProgress * 6;
+      moon.position.y =
+        10 - scrollProgress * 7 + Math.sin(elapsed * 0.35) * 0.25;
       const timeUniform = nebula.material.uniforms.uTime;
       if (timeUniform) timeUniform.value = elapsed;
       composer.render();
+    };
+
+    const handleScroll = () => {
+      const maximumScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      scrollTarget = Math.min(1, Math.max(0, window.scrollY / maximumScroll));
+      if (reduceMotion) {
+        scrollProgress = scrollTarget;
+        render((performance.now() - startTime) / 1000);
+      }
     };
 
     const animate = (time: number) => {
@@ -570,8 +744,10 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
 
     window.addEventListener("pointermove", handlePointer, { passive: true });
     window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("visibilitychange", handleVisibility);
 
+    handleScroll();
     render(2.4);
     onReadyRef.current();
     if (!reduceMotion) {
@@ -583,6 +759,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("pointermove", handlePointer);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("visibilitychange", handleVisibility);
       bloom.dispose();
       outputPass.dispose();
@@ -591,9 +768,13 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       disposeObject(flightStars);
       disposeObject(galaxy);
       disposeObject(dust);
+      disposeObject(constellations);
       disposeObject(nebula);
       disposeObject(saturn);
+      disposeObject(sun);
+      disposeObject(station);
       disposeObject(moon);
+      starTexture.dispose();
       renderer.dispose();
       renderer.domElement.removeEventListener(
         "webglcontextlost",
