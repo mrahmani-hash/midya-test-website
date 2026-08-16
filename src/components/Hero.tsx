@@ -78,7 +78,7 @@ export function Hero() {
           </div>
           <div className="portrait-frame">
             <img
-              src="/midya-photo.png"
+              src="/midya-photo.webp"
               alt="Midya Rahmani"
               width="512"
               height="512"
