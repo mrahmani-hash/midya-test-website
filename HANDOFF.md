@@ -84,10 +84,11 @@ metadata. The social image currently uses cache-bust `?v=8`.
 
 `src/components/GalaxyBackground.tsx` owns the Three.js lifecycle. It creates:
 
-- Procedural spiral galaxy, glowing multi-depth stars, and star-flight layer
-- Shader-based nebula plus faint procedural constellation lines
-- Original Three.js geometry for Saturn, a sun, moon, and space station
-- Scroll-reactive object paths, pointer depth/parallax, and restrained bloom
+- A drifting, color-cycling procedural galaxy with breathing bloom
+- Glowing multi-depth stars, forward star flight, and constellation lines
+- Traveling asteroid and nebula-cloud layers that recycle through camera depth
+- Recurring procedural Saturn, sun, moon, and space-station passes
+- Scroll bias, autonomous camera roving, pointer parallax, and adaptive bloom
 
 It does not load textures or remote 3D assets.
 
