@@ -85,9 +85,11 @@ metadata. The social image currently uses cache-bust `?v=8`.
 `src/components/GalaxyBackground.tsx` owns the Three.js lifecycle. It creates:
 
 - A drifting, color-cycling procedural galaxy with breathing bloom
-- Glowing multi-depth stars, forward star flight, and constellation lines
+- A forward-weighted star budget with brighter near-camera flight stars and
+  subdued outer stars, plus constellation lines
 - Traveling asteroid and nebula-cloud layers that recycle through camera depth
-- Recurring procedural Saturn, sun, moon, and space-station passes
+- Recurring procedural Saturn, sun, moon, banded ice planet, space station,
+  compact dish satellite, and additive-tail comet passes
 - Scroll bias, autonomous camera roving, pointer parallax, and adaptive bloom
 
 It does not load textures or remote 3D assets.
@@ -98,9 +100,17 @@ Full 3D remains on desktop and capable phones. The renderer selects a quality
 profile using viewport size, device memory, hardware concurrency, and device
 pixel ratio:
 
-- Mobile/low power: lower DPR and star counts, 40 fps cap, reduced bloom
-- Mid-tier: moderate DPR and particles, 55 fps cap
-- High-tier: higher DPR and particles, 60 fps cap
+- Mobile/low power: lower DPR, 40 fps cap, reduced bloom, 16-segment celestial
+  geometry, smaller objects, four asteroids, one cloud, and deeper respawns
+- Mid-tier: moderate DPR and particles, 55 fps cap, 24-segment objects
+- High-tier: higher DPR and particles, 60 fps cap, 36-segment objects
+
+The four star/dust particle pools keep their previous total budgets while
+favoring camera-flight points: mobile uses `260 / 580 / 800 / 100`, mid-tier
+uses `400 / 1100 / 1650 / 220`, and high-tier uses
+`600 / 1800 / 2600 / 430` for outer / flight / galaxy / dust respectively.
+Large planets use side lanes and recycle before reaching the camera; each
+traveling object has independent depth speed, path, spin, and scale ranges.
 
 Rendering pauses when the document is hidden. Reduced-motion users receive one
 static 3D frame. The component disposes geometries, materials, post-processing,
