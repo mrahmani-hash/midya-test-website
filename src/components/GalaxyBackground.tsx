@@ -61,8 +61,8 @@ function getQualityProfile(): QualityProfile {
   if (mobile || cores <= 4 || memory <= 4) {
     return {
       dpr: Math.min(dpr, 1.15),
-      stars: 700,
-      flightStars: 130,
+      stars: 420,
+      flightStars: 300,
       galaxyStars: 900,
       dust: 120,
       asteroids: 5,
@@ -75,8 +75,8 @@ function getQualityProfile(): QualityProfile {
   if (cores <= 8 || memory <= 8) {
     return {
       dpr: Math.min(dpr, 1.5),
-      stars: 1300,
-      flightStars: 250,
+      stars: 750,
+      flightStars: 560,
       galaxyStars: 1800,
       dust: 260,
       asteroids: 8,
@@ -88,8 +88,8 @@ function getQualityProfile(): QualityProfile {
 
   return {
     dpr: Math.min(dpr, 1.8),
-    stars: 2200,
-    flightStars: 420,
+    stars: 1200,
+    flightStars: 980,
     galaxyStars: 2800,
     dust: 450,
     asteroids: 12,
@@ -184,7 +184,7 @@ function createStarField(
     size: 0.22,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.76,
+    opacity: 0.48,
     vertexColors: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
@@ -203,6 +203,8 @@ function createFlightStars(
   const phases = new Float32Array(count);
   const palette = [
     new THREE.Color("#eef9ff"),
+    new THREE.Color("#ffffff"),
+    new THREE.Color("#f7fbff"),
     new THREE.Color("#8fe9ff"),
     new THREE.Color("#b9a7ff"),
     new THREE.Color("#ffe7ba"),
@@ -220,8 +222,8 @@ function createFlightStars(
     colors[positionIndex] = color?.r ?? 1;
     colors[positionIndex + 1] = color?.g ?? 1;
     colors[positionIndex + 2] = color?.b ?? 1;
-    sizes[index] = 0.7 + Math.random() * 1.65;
-    speeds[index] = 3.6 + Math.random() * 7.8;
+    sizes[index] = 0.85 + Math.random() * 1.9;
+    speeds[index] = 4.4 + Math.random() * 10.2;
     phases[index] = Math.random() * Math.PI * 2;
   }
 
@@ -256,9 +258,9 @@ function createFlightStars(
         float viewDepth = max(1.0, -viewPosition.z);
         float twinkle = 0.62 + 0.38 * sin(uTime * 2.3 + aPhase);
         float nearGlow = 1.0 - smoothstep(22.0, 86.0, viewDepth);
-        vAlpha = twinkle * (0.42 + nearGlow * 0.58);
+        vAlpha = twinkle * (0.62 + nearGlow * 0.55);
         vColor = color;
-        gl_PointSize = clamp(aSize * (78.0 / viewDepth), 1.0, 8.5);
+        gl_PointSize = clamp(aSize * (92.0 / viewDepth), 1.2, 10.5);
         gl_Position = projectionMatrix * viewPosition;
       }
     `,
@@ -277,10 +279,10 @@ function createFlightStars(
         float horizontalRay =
           smoothstep(0.075, 0.0, abs(point.y)) *
           smoothstep(0.5, 0.06, abs(point.x));
-        float sparkle = max(core, max(verticalRay, horizontalRay) * 0.72);
+        float sparkle = max(core, max(verticalRay, horizontalRay) * 0.82);
         float alpha = sparkle * vAlpha;
         if (alpha < 0.025) discard;
-        gl_FragColor = vec4(vColor, alpha);
+        gl_FragColor = vec4(vColor * 1.2, alpha);
       }
     `,
   });
@@ -897,7 +899,7 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       outerStars.rotation.x = Math.sin(elapsed * 0.03) * 0.018;
       const outerMaterial = outerStars.material as THREE.PointsMaterial;
       outerMaterial.opacity =
-        0.68 + Math.sin(elapsed * 0.9) * 0.08 * motionScale;
+        0.42 + Math.sin(elapsed * 0.9) * 0.05 * motionScale;
       const flightTime = flightStars.material.uniforms.uTime;
       if (flightTime) flightTime.value = elapsed;
       const galaxyCycleLength = 22;
