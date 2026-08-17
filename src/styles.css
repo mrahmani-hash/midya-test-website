@@ -2196,7 +2196,7 @@ body {
   }
 
   .hero__portrait-system {
-    width: min(330px, 82vw);
+    width: min(270px, 68vw);
     order: 0;
   }
 
@@ -2218,7 +2218,7 @@ body {
   }
 
   .hero__portrait-system {
-    width: min(280px, 76vw);
+    width: min(220px, 58vw);
   }
 
   .hero h1 {

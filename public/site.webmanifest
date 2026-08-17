@@ -14,7 +14,7 @@
     },
     {
       "src": "/midya-photo.webp",
-      "sizes": "1024x1024",
+      "sizes": "2048x2048",
       "type": "image/webp",
       "purpose": "any"
     }
