@@ -25,7 +25,7 @@ export const profile = {
     domain: "gmail.com",
   },
   hero:
-    "Toronto-based technology professional with 12+ years of experience across Adaptavist, CIBC, and Group of Gold Line. My work is guided by a deep curiosity about AI and how it is changing the way we work, build, and think. I explore practical applications of large language models, workflow automation, and agentic systems, while keeping a close eye on investing, markets, and the broader direction of technology.",
+    "Toronto-based technology professional with 12+ years of experience across technology, financial services, and telecommunications. My work is guided by a deep curiosity about AI and how it is changing the way we work, build, and think. I explore practical applications of large language models, workflow automation, and agentic systems, while keeping a close eye on investing, markets, and the broader direction of technology.",
   about: [
     "My graduate studies at the University of Waterloo and undergraduate education at York University strengthened a habit of asking careful questions, learning continuously, and connecting technical ideas with real-world context.",
     "I am especially interested in the practical side of AI: how large language models can support useful workflow automation, how agentic systems are evolving, and where thoughtful experimentation can lead.",
