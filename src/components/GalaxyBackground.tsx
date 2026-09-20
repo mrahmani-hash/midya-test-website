@@ -36,9 +36,7 @@ type CelestialMotion = {
     | "sun"
     | "station"
     | "moon"
-    | "planet"
-    | "satellite"
-    | "comet";
+    | "planet";
   speed: number;
   baseX: number;
   baseY: number;
@@ -683,120 +681,6 @@ function createIcePlanet(detail: number): THREE.Group {
   return group;
 }
 
-function createSatellite(detail: number): THREE.Group {
-  const group = new THREE.Group();
-  const radialDetail = Math.max(8, Math.floor(detail * 0.5));
-  const hullMaterial = new THREE.MeshStandardMaterial({
-    color: "#d2dae0",
-    emissive: "#213342",
-    emissiveIntensity: 0.4,
-    metalness: 0.74,
-    roughness: 0.28,
-  });
-  const goldMaterial = new THREE.MeshStandardMaterial({
-    color: "#b99045",
-    emissive: "#5f3b0d",
-    emissiveIntensity: 0.42,
-    metalness: 0.65,
-    roughness: 0.32,
-    side: THREE.DoubleSide,
-  });
-  const panelMaterial = new THREE.MeshStandardMaterial({
-    color: "#174e86",
-    emissive: "#0a68a0",
-    emissiveIntensity: 0.62,
-    metalness: 0.4,
-    roughness: 0.4,
-  });
-  const bus = new THREE.Mesh(
-    new THREE.BoxGeometry(0.66, 0.52, 0.72),
-    hullMaterial,
-  );
-  const leftPanel = new THREE.Mesh(
-    new THREE.BoxGeometry(0.92, 0.055, 0.48),
-    panelMaterial,
-  );
-  leftPanel.position.x = -0.92;
-  const rightPanel = leftPanel.clone();
-  rightPanel.position.x = 0.92;
-  const dish = new THREE.Mesh(
-    new THREE.ConeGeometry(0.29, 0.17, radialDetail, 1, true),
-    goldMaterial,
-  );
-  dish.position.z = 0.48;
-  dish.rotation.x = -Math.PI / 2;
-  const antenna = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.018, 0.018, 0.42, 6),
-    hullMaterial.clone(),
-  );
-  antenna.position.z = 0.68;
-  antenna.rotation.x = Math.PI / 2;
-  const beacon = new THREE.Mesh(
-    new THREE.SphereGeometry(0.055, radialDetail, 6),
-    new THREE.MeshBasicMaterial({ color: "#ffdc73" }),
-  );
-  beacon.position.z = 0.91;
-  group.add(bus, leftPanel, rightPanel, dish, antenna, beacon);
-  return group;
-}
-
-function createComet(detail: number): THREE.Group {
-  const group = new THREE.Group();
-  const radialDetail = Math.max(8, Math.floor(detail * 0.55));
-  const nucleus = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(0.24, detail > 20 ? 1 : 0),
-    new THREE.MeshStandardMaterial({
-      color: "#b8c5cb",
-      emissive: "#6fb9d4",
-      emissiveIntensity: 0.7,
-      roughness: 0.86,
-      flatShading: true,
-    }),
-  );
-  const coma = new THREE.Mesh(
-    new THREE.SphereGeometry(0.52, radialDetail, radialDetail),
-    new THREE.MeshBasicMaterial({
-      color: "#9eeaff",
-      transparent: true,
-      opacity: 0.18,
-      side: THREE.BackSide,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    }),
-  );
-  const outerTail = new THREE.Mesh(
-    new THREE.ConeGeometry(1.05, 6.2, radialDetail, 1, true),
-    new THREE.MeshBasicMaterial({
-      color: "#5dbfff",
-      transparent: true,
-      opacity: 0.11,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    }),
-  );
-  outerTail.position.z = -3.1;
-  outerTail.rotation.x = Math.PI / 2;
-  const innerTail = new THREE.Mesh(
-    new THREE.ConeGeometry(0.42, 4.2, radialDetail, 1, true),
-    new THREE.MeshBasicMaterial({
-      color: "#d8f8ff",
-      transparent: true,
-      opacity: 0.19,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    }),
-  );
-  innerTail.position.z = -2.1;
-  innerTail.rotation.x = Math.PI / 2;
-  outerTail.renderOrder = 3;
-  innerTail.renderOrder = 4;
-  group.add(outerTail, innerTail, coma, nucleus);
-  group.rotation.set(0.18, -0.58, -0.12);
-  return group;
-}
-
 function isLargeCelestial(kind: CelestialMotion["kind"]): boolean {
   return kind === "saturn" || kind === "sun" || kind === "planet";
 }
@@ -810,14 +694,11 @@ function resetCelestial(
   const lowerField = motion.kind === "saturn" || motion.kind === "sun";
   const upperField =
     motion.kind === "station" ||
-    motion.kind === "satellite" ||
     motion.kind === "planet";
   const side = Math.random() > 0.5 ? 1 : -1;
   motion.baseX = large
     ? side * (11 + Math.random() * 8)
-    : motion.kind === "comet"
-      ? side * (4 + Math.random() * 7)
-      : (Math.random() - 0.5) * 30;
+    : (Math.random() - 0.5) * 30;
   motion.baseY = lowerField
     ? -6 - Math.random() * 5
     : upperField
@@ -959,8 +840,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
     const sun = createSun(quality.objectDetail);
     const station = createSpaceStation(quality.objectDetail);
     const planet = createIcePlanet(quality.objectDetail);
-    const satellite = createSatellite(quality.objectDetail);
-    const comet = createComet(quality.objectDetail);
     const moon = new THREE.Mesh(
       new THREE.SphereGeometry(
         0.42,
@@ -1050,36 +929,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
         scaleMin: 0.76 * quality.objectScale,
         scaleMax: 0.98 * quality.objectScale,
       },
-      {
-        object: satellite,
-        kind: "satellite",
-        speed: 4.6,
-        baseX: -10,
-        baseY: 8,
-        phase: 3.2,
-        orbitX: 1.5,
-        orbitY: 0.85,
-        pathSpeed: 0.33,
-        spinX: 0.18,
-        spinY: 0.8,
-        scaleMin: 0.78 * quality.objectScale,
-        scaleMax: 1.08 * quality.objectScale,
-      },
-      {
-        object: comet,
-        kind: "comet",
-        speed: 5.4,
-        baseX: 1,
-        baseY: -7,
-        phase: 0.2,
-        orbitX: 1.4,
-        orbitY: 0.8,
-        pathSpeed: 0.25,
-        spinX: 0.02,
-        spinY: 0.04,
-        scaleMin: 0.95 * quality.objectScale,
-        scaleMax: 1.2 * quality.objectScale,
-      },
     ];
     const initialDepthByKind: Record<CelestialMotion["kind"], number> = {
       saturn: -44,
@@ -1087,8 +936,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       station: -30,
       moon: -55,
       planet: -50,
-      satellite: -25,
-      comet: -52,
     };
     celestialMotions.forEach((motion) => {
       motion.object.position.set(
@@ -1163,8 +1010,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       station,
       moon,
       planet,
-      satellite,
-      comet,
       ...asteroids.map(({ mesh }) => mesh),
       ...clouds.map(({ sprite }) => sprite),
     );
@@ -1269,17 +1114,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
         });
         const stationRing = station.children[1];
         if (stationRing) stationRing.rotation.z += delta * 0.65;
-        const cometOuterTail = comet.children[0] as
-          | THREE.Mesh<THREE.ConeGeometry, THREE.MeshBasicMaterial>
-          | undefined;
-        const cometInnerTail = comet.children[1] as
-          | THREE.Mesh<THREE.ConeGeometry, THREE.MeshBasicMaterial>
-          | undefined;
-        if (cometOuterTail && cometInnerTail) {
-          const tailPulse = 0.5 + Math.sin(elapsed * 1.7) * 0.5;
-          cometOuterTail.material.opacity = 0.13 + tailPulse * 0.055;
-          cometInnerTail.material.opacity = 0.22 + tailPulse * 0.075;
-        }
 
         asteroids.forEach((motion) => {
           motion.mesh.position.z += motion.speed * delta;
@@ -1384,8 +1218,6 @@ export function GalaxyBackground({ onReady }: GalaxyBackgroundProps) {
       disposeObject(station);
       disposeObject(moon);
       disposeObject(planet);
-      disposeObject(satellite);
-      disposeObject(comet);
       asteroidGeometry.dispose();
       asteroidMaterial.dispose();
       clouds.forEach(({ sprite }) => sprite.material.dispose());
